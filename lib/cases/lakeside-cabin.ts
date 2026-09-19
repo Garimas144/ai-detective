@@ -1,9 +1,10 @@
 import type { Case } from "../types";
 
 // Culprit: Chloe Tran (C1).
-// Chain: Nate's last text summoned Chloe to the dock at 00:08 (E1) + size 7 wet sneaker prints to the
-// back door (E2) -> Maya found Chloe's bed empty at 00:10 -> Jess saw a short hooded figure walking
-// back from the dock at 00:20 -> Dev heard the back door and wet footsteps at 00:20.
+// The evidence alone does NOT name Chloe: Nate's last message went to the whole group chat (E1), so anyone who
+// cared about "the money" could have gone, and size 7 prints (E2) fit several people. Testimony decides it:
+// Maya found Chloe's bed empty at 00:10 -> Jess saw a short hooded figure walking back from the dock at 00:20 ->
+// Dev heard the back door and wet footsteps at 00:20 -> Sofia saw Chloe on the back deck at 00:05.
 export const lakesideCabin: Case = {
   id: "lakeside-cabin",
   title: "The Lakeside Cabin Murder",
@@ -16,9 +17,9 @@ export const lakesideCabin: Case = {
     {
       id: "E1",
       title: "Nate's last message",
-      text: "Nate's phone, found in the cabin, shows his last message at 00:08, sent to Chloe: 'Dock. Now. We need to talk about the money.'",
+      text: "Nate's phone, found in the cabin, shows his last message at 00:08, sent to the group chat 'Loon Lake weekend': 'Dock. Now. Whoever this concerns, we need to talk about the money.'",
       kind: "key",
-      explanation: "Nate had found out Chloe was embezzling from their company and summoned her to the dock.",
+      explanation: "Nate had found out Chloe was embezzling from their company and summoned her to the dock. He sent it to the whole group so nobody would suspect her. Chloe knew it meant her.",
     },
     {
       id: "E2",
@@ -58,7 +59,7 @@ export const lakesideCabin: Case = {
       relationship: "Nate is your co-founder. Maya is your roommate this weekend.",
       reasonPresent: "The reunion. You've all been friends since university.",
       motive: "You've been quietly moving company money into your own account. Nate found out.",
-      suspicious: "Nate's last message was to you. You wear size 7 sneakers.",
+      suspicious: "Nate's last message was about company money. You wear size 7 sneakers.",
       secret: null,
       knows: [
         "Owen and Nate argued on the porch earlier. You heard raised voices.",
@@ -66,13 +67,13 @@ export const lakesideCabin: Case = {
       ],
       culprit: true,
       whatYouDid: [
-        "At 00:08 Nate texted you to meet him at the dock. You slipped out of your shared room while Maya slept.",
+        "At 00:08 Nate texted the whole group chat to come to the dock about \"the money\". You knew it meant you, and slipped out of your shared room while Maya slept.",
         "On the dock he said he'd go to the police. You argued, you shoved him, he hit his head on a post and fell into the shallows.",
         "You panicked, walked back soaked to the ankles, and came in through the unlocked back door at about 00:20.",
         "You deleted his message on your own phone, but not on his.",
       ],
       looseEnds: [
-        "Nate's phone still shows the message to you.",
+        "Nate's phone still shows the message, and you are the one who answered it.",
         "Maya might have noticed your bed was empty.",
         "Your wet sneakers left prints.",
       ],
@@ -191,9 +192,9 @@ export const lakesideCabin: Case = {
     },
   ],
   truth:
-    "Chloe Tran had been embezzling from the company. Nate texted her to meet at the dock at 00:08, and when he threatened to go to the police she shoved him. He hit his head and fell into the shallows. She walked back soaked and slipped in through the back door Owen had left unlocked. The whisky was Owen and Nate's argument about Maya, and the forty bunless hot dogs were Jess's prank.",
+    "Chloe Tran had been embezzling from the company. Nate texted the whole group about 'the money' at 00:08, and when he threatened to go to the police she shoved him. He hit his head and fell into the shallows. She walked back soaked and slipped in through the back door Owen had left unlocked. The whisky was Owen and Nate's argument about Maya, and the forty bunless hot dogs were Jess's prank.",
   chain: [
-    { id: "message", description: "Nate's 00:08 message to Chloe", keywords: ["00:08", "message", "text", "dock"] },
+    { id: "message", description: "Nate's 00:08 group message about the money", keywords: ["00:08", "message", "text", "dock", "money"] },
     { id: "prints", description: "Size 7 wet prints to the back door", keywords: ["size 7", "sneaker", "prints", "wet"] },
     { id: "empty-bed", description: "Chloe's bed was empty at 00:10", keywords: ["bed", "empty", "00:10", "asleep"] },
     { id: "back-door", description: "Hooded figure from the dock and the back door at 00:20", keywords: ["00:20", "hood", "back door", "footsteps"] },

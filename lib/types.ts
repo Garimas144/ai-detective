@@ -118,6 +118,18 @@ export interface Corroboration {
   round: number;
 }
 
+/** How a spoken or typed answer reached the server. Kept for later delivery/hesitation analysis. */
+export interface TurnVoice {
+  mode: "typed" | "stt-tts" | "agent";
+  /** Where the final text came from: our own STT call, ElevenLabs' record of the conversation, or the phone's report. */
+  transcriptSource: "typed" | "stt" | "elevenlabs-api" | "client-reported";
+  conversationId?: string;
+  /** The user's utterances exactly as recognized, before we joined and trimmed them. */
+  segments?: string[];
+  /** Milliseconds from the question being asked to the answer arriving. */
+  answerMs?: number;
+}
+
 export interface Turn {
   id: string;
   kind: TestimonySource;
@@ -128,6 +140,7 @@ export interface Turn {
   timedOut: boolean;
   evasive: boolean;
   claimIds: string[];
+  voice?: TurnVoice;
 }
 
 export interface PlannedQuestion {

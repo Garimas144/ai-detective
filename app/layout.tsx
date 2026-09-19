@@ -1,10 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AI Detective",
   description: "Try to fool an AI detective.",
 };
+
+// viewport-fit=cover lets us use the phone's safe areas (notch, home bar) via env(safe-area-inset-*).
+export const viewport: Viewport = { width: "device-width", initialScale: 1, viewportFit: "cover", themeColor: "#0f1115" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

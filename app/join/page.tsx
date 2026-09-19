@@ -38,7 +38,7 @@ export default function Join() {
   return (
     <form className="mobile" onSubmit={join}>
       <div className="mobile-head"><div className="brand">AI <span>Detective</span></div></div>
-      <div className="stack">
+      <div className="stack grow">
         <h1 style={{ marginBottom: 0 }}>Join a game</h1>
         <label className="stack" style={{ gap: 6 }}>
           <span className="tiny">Room code</span>

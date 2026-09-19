@@ -58,11 +58,12 @@ export default function Host({ params }: { params: { code: string } }) {
         </div>
         <div className="row">
           <span className="room" style={{ fontWeight: 800, letterSpacing: "0.12em", color: "var(--accent)" }}>{view.code}</span>
-          {view.llmProvider === "mock" && <span className="badge mock" title="No NEBIUS_API_KEY set">Mock detective</span>}
-          {!view.voiceEnabled && <span className="badge mock" title="ELEVENLABS_API_KEY missing or rejected (see server log)">Voice off</span>}
+          <VoiceBadge mode={view.voiceMode} />
+          <span className={`badge ${view.llmProvider === "nebius" ? "live" : "mock"}`}>{view.llmProvider === "nebius" ? "Nebius live" : "MOCK detective"}</span>
           {status === "offline" && <span className="badge mock">Reconnecting…</span>}
         </div>
       </div>
+      {view.llmProvider === "mock" && <MockBanner />}
       {error && <div className="error" style={{ marginBottom: 12 }}>{error}</div>}
       {view.error && <div className="notice small" style={{ marginBottom: 12 }}>A detective model call had a problem, so a fallback was used: {view.error}</div>}
 
@@ -82,6 +83,24 @@ export default function Host({ params }: { params: { code: string } }) {
       {payload.debug ? <details className="panel" style={{ marginTop: 14 }}><summary>DEBUG_HOST: raw game state (never show players)</summary><pre className="small" style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(payload.debug, null, 1).slice(0, 20000)}</pre></details> : null}
     </div>
   );
+}
+
+function MockBanner() {
+  return (
+    <div className="mock-banner" role="alert">
+      <b>MOCK DETECTIVE: this is NOT Nebius.</b> Questions and rulings are canned heuristics. Set NEBIUS_API_KEY, restart, and run <code>npm run preflight</code> before demoing.
+    </div>
+  );
+}
+
+function VoiceBadge({ mode }: { mode: PublicView["voiceMode"] }) {
+  const map = {
+    agent: ["live", "Voice: ElevenLabs agent", "Players speak to a live ElevenLabs Conversational AI session."],
+    "stt-tts": ["mock", "Voice: fallback (recorder + TTS)", "No conversational agent: phones record, the server transcribes, this screen speaks. Set ELEVENLABS_AGENT_ID for the real thing."],
+    text: ["mock", "Voice: OFF (typing)", "ElevenLabs is not configured or the key was rejected. See the server log."],
+  } as const;
+  const [cls, label, tip] = map[mode];
+  return <span className={`badge ${cls}`} title={tip}>{label}</span>;
 }
 
 const nameOf = (view: PublicView, id?: string | null) => {
@@ -121,6 +140,7 @@ function Lobby({ view, act, busy }: { view: PublicView; act: Act; busy: boolean 
   const joinUrl = `${base}/join?code=${view.code}`;
   const insecure = base.startsWith("http://") && !/localhost|127\.0\.0\.1/.test(base);
   const localOnly = /localhost|127\.0\.0\.1/.test(base);
+  const isHttps = base.startsWith("https://");
   const s = view.settings;
   const patch = (p: Partial<typeof s>) => act({ type: "settings", patch: p });
   const n = view.players.length;
@@ -134,8 +154,9 @@ function Lobby({ view, act, busy }: { view: PublicView; act: Act; busy: boolean 
             <div className="tiny">Room code</div>
             <div className="room-code">{view.code}</div>
             <div className="small muted" style={{ marginTop: 8 }}>Scan, or open <b>{base || "…"}/join</b></div>
-            {localOnly && <div className="notice small" style={{ marginTop: 8 }}>Phones can't reach localhost. Start a tunnel (npm run tunnel) and open this screen at the tunnel URL, or set PUBLIC_URL.</div>}
-            {insecure && <div className="notice small" style={{ marginTop: 8 }}>This is plain http. Phone microphones need https, so use the tunnel URL.</div>}
+            {localOnly && <div className="error small" style={{ marginTop: 8 }}><b>Phones can't use this address.</b> You opened the host page on localhost, so the QR code points at localhost. Start the tunnel (<code>npm run tunnel</code>) and open the https tunnel URL on this laptop instead, or set PUBLIC_URL.</div>}
+            {insecure && <div className="error small" style={{ marginTop: 8 }}><b>This is plain http.</b> Phone microphones only work over https. Use the https tunnel URL.</div>}
+            {isHttps && <div className="small muted" style={{ marginTop: 8 }}>✓ https: phone microphones will work.</div>}
           </div>
         </div>
         <div className="panel">
@@ -224,13 +245,17 @@ function Alibis({ view, act, busy }: { view: PublicView; act: Act; busy: boolean
   );
 }
 
-/** Plays detective speech on the shared screen. Browsers need one click first to allow audio. */
+/**
+ * Plays detective speech on the shared screen with ElevenLabs text-to-speech. Browsers need one click first to allow audio.
+ * In agent mode the player's phone speaks each question through the agent, so this screen only speaks the accusation.
+ */
 function useDetectiveVoice(view: PublicView) {
   const [on, setOn] = useState(false);
   const audio = useRef<HTMLAudioElement | null>(null);
   const spoken = useRef<string | null>(null);
   const say = async (kind: "question" | "accusation", key: string) => {
-    if (!on || !view.voiceEnabled || spoken.current === key) return;
+    if (!on || view.voiceMode === "text" || spoken.current === key) return;
+    if (kind === "question" && view.voiceMode === "agent") return;
     spoken.current = key;
     const res = await emitAck<{ audio: ArrayBuffer; mimeType: string }>(EVENTS.tts, { kind }, 30_000);
     if (!res.ok) return;
@@ -238,12 +263,12 @@ function useDetectiveVoice(view: PublicView) {
     audio.current = new Audio(URL.createObjectURL(new Blob([res.audio], { type: res.mimeType })));
     audio.current.play().catch(() => {});
   };
-  return { on, setOn, say, available: view.voiceEnabled };
+  return { on, setOn, say, available: view.voiceMode !== "text" };
 }
 
 function VoiceToggle({ voice }: { voice: ReturnType<typeof useDetectiveVoice> }) {
   if (!voice.available) return null;
-  return <button onClick={() => voice.setOn(!voice.on)}>{voice.on ? "🔊 Detective voice on" : "🔈 Turn on detective voice"}</button>;
+  return <button onClick={() => voice.setOn(!voice.on)}>{voice.on ? "🔊 Detective voice on" : "🔈 Turn on detective voice (accusation)"}</button>;
 }
 
 function Interrogation({ view, act, busy, clockOffset }: { view: PublicView; act: Act; busy: boolean; clockOffset: number }) {

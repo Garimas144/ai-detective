@@ -13,8 +13,8 @@ export function stripReasoning(text: string): string {
   return text.replace(/<think>[\s\S]*?<\/think>/gi, "").replace(/^[\s\S]*?<\/think>/i, "").trim();
 }
 
-export function createNebiusClient(apiKey: string): LLMClient {
-  const client = new OpenAI({ apiKey, baseURL: NEBIUS_BASE_URL, maxRetries: 4, timeout: 90_000 });
+export function createNebiusClient(apiKey: string, baseURL: string = NEBIUS_BASE_URL): LLMClient {
+  const client = new OpenAI({ apiKey, baseURL, maxRetries: 4, timeout: 90_000 });
   const noJsonMode = new Set<string>();
 
   async function once(req: LLMRequest, model: string) {
@@ -44,8 +44,11 @@ export function createNebiusClient(apiKey: string): LLMClient {
     provider: "nebius",
     async complete(req) {
       const started = Date.now();
-      const models =
-        req.model === MODELS.detectiveTurn ? [req.model, MODELS.detectiveTurnFallback] : [req.model];
+      const fallbacks: Record<string, string> = {
+        [MODELS.detectiveTurn]: MODELS.detectiveTurnFallback,
+        [MODELS.detectiveReasoning]: MODELS.detectiveReasoningFallback,
+      };
+      const models = fallbacks[req.model] && fallbacks[req.model] !== req.model ? [req.model, fallbacks[req.model]] : [req.model];
       let lastError: unknown;
       for (const model of models) {
         try {

@@ -13,7 +13,7 @@ export interface ViewContext {
   state: GameState;
   secrets: Secrets | null;
   llmProvider: "nebius" | "mock";
-  voiceEnabled: boolean;
+  voiceMode: "agent" | "stt-tts" | "text";
   publicUrl: string | null;
 }
 
@@ -80,7 +80,7 @@ export function publicView(ctx: ViewContext): PublicView {
     busy: state.busy,
     error: state.error,
     llmProvider: ctx.llmProvider,
-    voiceEnabled: ctx.voiceEnabled,
+    voiceMode: ctx.voiceMode,
     serverNow: Date.now(),
   };
 }

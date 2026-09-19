@@ -1,9 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCountdown } from "@/components/useCountdown";
-import { micSupported, useRecorder } from "@/components/useRecorder";
+import type { AgentResult } from "@/components/AgentTurn";
+import { explainMicError, micSupport } from "@/components/mic";
+import { useRecorder } from "@/components/useRecorder";
 import { emitAck, useGame } from "@/lib/client/useGame";
 import { EVENTS, type PlayerPrivate, type PublicView } from "@/lib/protocol";
 import type { CaseCharacter } from "@/lib/types";
@@ -28,6 +31,8 @@ export default function Play({ params }: { params: { code: string } }) {
   return (
     <div className="mobile">
       <Head code={code} status={status} name={me.name} />
+      {view.llmProvider === "mock" && <div className="mock-banner small" role="alert"><b>MOCK detective</b>: not Nebius.</div>}
+      {status === "offline" && <div className="notice small" style={{ marginBottom: 12 }}>Connection lost. Reconnecting… you'll pick up right where you left off.</div>}
       {error && <div className="error" style={{ marginBottom: 12 }}>{error}</div>}
       <PhaseScreen view={view} me={me} game={game} />
     </div>
@@ -231,11 +236,19 @@ const MicIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2Z" /></svg>
 );
 
+// The ElevenLabs SDK touches browser-only APIs, so it is only loaded in the browser and only when needed.
+const AgentTurn = dynamic(() => import("@/components/AgentTurn"), { ssr: false, loading: () => <p className="muted">Loading voice…</p> });
+
+type AnswerMode = "agent" | "recorder" | "text";
+
 function MyTurn({ view, game }: { view: PublicView; game: Game }) {
   const q = view.current!;
   const left = useCountdown(q.deadline, game.clockOffset);
-  const voice = view.voiceEnabled && micSupported();
-  const [mode, setMode] = useState<"voice" | "text">(voice ? "voice" : "text");
+  const mic = micSupport();
+  // Best available mode first: real conversational agent, then recorder + server transcription, then typing.
+  const initial: AnswerMode = view.voiceMode === "agent" && mic.ok ? "agent" : view.voiceMode !== "text" && mic.ok ? "recorder" : "text";
+  const [mode, setMode] = useState<AnswerMode>(initial);
+  const [notice, setNotice] = useState<string | null>(view.voiceMode !== "text" && !mic.ok ? mic.message : null);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [heard, setHeard] = useState<string | null>(null);
@@ -246,52 +259,69 @@ function MyTurn({ view, game }: { view: PublicView; game: Game }) {
     if ("vibrate" in navigator) navigator.vibrate?.(200);
   }, []);
 
-  const sendText = useCallback(
-    async (timedOut: boolean) => {
+  /** Sends the answer exactly once, whichever mode produced it. */
+  const submit = useCallback(
+    async (run: () => Promise<{ ok: true; transcript?: string } | { ok: false; error: string }>) => {
       if (sent.current) return;
       sent.current = true;
       setSending(true);
-      const res = await game.playerAction({ type: "answer", text, timedOut });
-      if (!res.ok) sent.current = false;
-      setSending(false);
-    },
-    [game, text],
-  );
-
-  const sendVoice = useCallback(
-    async (timedOut: boolean) => {
-      if (sent.current) return;
-      const out = await rec.stop();
-      if (!out) return;
-      sent.current = true;
-      setSending(true);
-      const res = await emitAck<{ transcript: string }>(EVENTS.voiceAnswer, { audio: await out.blob.arrayBuffer(), mimeType: out.mimeType, timedOut });
-      if (res.ok) setHeard(res.transcript);
+      const res = await run();
+      if (res.ok) setHeard(res.transcript ?? null);
       else {
         game.setError(res.error);
         sent.current = false;
       }
       setSending(false);
     },
-    [game, rec],
+    [game],
   );
 
-  // Time limit: when the clock hits zero, send what we have.
+  const sendText = (timedOut: boolean) => submit(async () => ({ ...(await game.playerAction({ type: "answer", text, timedOut })) }) as never);
+
+  const sendAgent = useCallback(
+    (result: AgentResult, timedOut: boolean) =>
+      submit(async () => (await emitAck<{ transcript: string }>(EVENTS.agentAnswer, { conversationId: result.conversationId, segments: result.segments, timedOut })) as never),
+    [submit],
+  );
+
+  const sendRecording = (timedOut: boolean) =>
+    submit(async () => {
+      const out = await rec.stop();
+      if (!out) return { ok: false as const, error: "Nothing was recorded." };
+      return (await emitAck<{ transcript: string }>(EVENTS.voiceAnswer, { audio: await out.blob.arrayBuffer(), mimeType: out.mimeType, timedOut })) as never;
+    });
+
+  // Recorder / text modes: when the clock hits zero, send what we have. (Agent mode handles its own clock.)
   useEffect(() => {
     if (left !== 0 || sent.current) return;
-    if (rec.recording) sendVoice(true);
+    if (mode === "recorder" && rec.recording) sendRecording(true);
     else if (mode === "text" && text.trim()) sendText(true);
-  }, [left, rec.recording, mode, text, sendVoice, sendText]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [left]);
+
+  const fallBack = useCallback(
+    (message: string) => {
+      // If the microphone itself is the problem, the recorder can't help either: go straight to typing.
+      const micProblem = explainMicError(message) !== "" || /microphone|https|secure/i.test(message);
+      const next: AnswerMode = mode === "agent" && mic.ok && !micProblem && view.voiceMode !== "text" ? "recorder" : "text";
+      setNotice(`${message} ${next === "recorder" ? "Switching to the simple recorder." : "You can type your answer instead."}`);
+      setMode(next);
+    },
+    [mic.ok, mode, view.voiceMode],
+  );
 
   const toggleMic = async () => {
-    if (rec.recording) return sendVoice(false);
+    if (rec.recording) return sendRecording(false);
     try {
       await rec.start();
-    } catch {
-      game.setError("Couldn't use the microphone. Allow mic access, or type your answer.");
+    } catch (err) {
+      setNotice(`${explainMicError(err) || "Couldn't use the microphone."} You can type your answer instead.`);
       setMode("text");
     }
   };
+
+  const modeLabel = mode === "agent" ? "Live voice" : mode === "recorder" ? "Voice (recorder)" : "Typing";
+  const working = sending || heard !== null;
 
   return (
     <>
@@ -299,25 +329,32 @@ function MyTurn({ view, game }: { view: PublicView; game: Game }) {
         <div className="turn-banner">YOUR TURN</div>
         <div className={`huge-timer ${left !== null && left <= 10 ? "low" : ""}`}>{left ?? ""}</div>
         <div className="hero-q">“{q.text}”</div>
-        {sending && <div className="panel thinking" style={{ textAlign: "center" }}>{mode === "voice" ? "Sending your answer…" : "Sending…"}</div>}
+        {notice && <div className="notice small">{notice}</div>}
+        {sending && <div className="panel thinking" style={{ textAlign: "center" }}>Sending your answer…</div>}
         {heard !== null && <p className="small muted">The detective heard: “{heard || "(nothing)"}”</p>}
-        {!sending && heard === null && mode === "voice" && (
-          <>
-            <button className={`mic ${rec.recording ? "rec" : ""}`} onClick={toggleMic}>
-              <MicIcon />
-              {rec.recording ? "Tap to finish" : "Tap to answer"}
-            </button>
-            <button className="linkish" onClick={() => setMode("text")}>Type instead</button>
-          </>
+
+        {!working && mode === "agent" && <AgentTurn secondsLeft={left} onDone={sendAgent} onFail={fallBack} />}
+
+        {!working && mode === "recorder" && (
+          <button className={`mic ${rec.recording ? "rec" : ""}`} onClick={toggleMic}>
+            <MicIcon />
+            {rec.recording ? "Tap to finish" : "Tap to answer"}
+          </button>
         )}
-        {!sending && heard === null && mode === "text" && (
-          <>
-            <textarea autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="Your answer, in character" />
-            {voice && <button className="linkish" onClick={() => setMode("voice")}>Speak instead</button>}
-          </>
+
+        {!working && mode === "text" && (
+          <textarea autoFocus value={text} onChange={(e) => setText(e.target.value)} placeholder="Your answer, in character" />
+        )}
+
+        {!working && (
+          <div className="row" style={{ justifyContent: "center", gap: 4 }}>
+            <span className="tiny">{modeLabel}</span>
+            {mode !== "text" && <button className="linkish" onClick={() => setMode("text")}>Type instead</button>}
+            {mode === "text" && view.voiceMode !== "text" && mic.ok && <button className="linkish" onClick={() => setMode(view.voiceMode === "agent" ? "agent" : "recorder")}>Speak instead</button>}
+          </div>
         )}
       </div>
-      {mode === "text" && !sending && heard === null && (
+      {mode === "text" && !working && (
         <div className="action-bar">
           <button className="btn-xl primary" disabled={!text.trim()} onClick={() => sendText(false)}>Send answer</button>
         </div>

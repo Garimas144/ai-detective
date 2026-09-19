@@ -5,13 +5,9 @@ import { createMockClient } from "@/lib/llm/mock";
 import type { ClientPayload } from "@/lib/protocol";
 import { Rooms, type Room } from "@/server/rooms";
 import { hostView, playerView, publicView } from "@/server/views";
-import type { VoiceService } from "@/server/voice";
+import { fakeVoice } from "./fakeVoice";
 
-const noVoice: VoiceService = {
-  enabled: false,
-  speak: async () => { throw new Error("off"); },
-  transcribe: async () => { throw new Error("off"); },
-};
+const noVoice = fakeVoice("text");
 
 function setup(players = 4) {
   const rooms = new Rooms({ llm: createMockClient(), voice: noVoice, publicUrl: null, broadcast: () => {} });

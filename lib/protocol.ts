@@ -32,6 +32,8 @@ export const EVENTS = {
   hostAction: "host:action",
   playerAction: "player:action",
   voiceAnswer: "player:voiceAnswer",
+  agentToken: "voice:agentToken",
+  agentAnswer: "player:agentAnswer",
   tts: "host:tts",
 } as const;
 
@@ -104,7 +106,8 @@ export interface PublicView {
   busy: boolean;
   error: string | null;
   llmProvider: "nebius" | "mock";
-  voiceEnabled: boolean;
+  /** agent = ElevenLabs Conversational AI on the phone; stt-tts = recorder + text-to-speech fallback; text = typing */
+  voiceMode: "agent" | "stt-tts" | "text";
   serverNow: number;
 }
 

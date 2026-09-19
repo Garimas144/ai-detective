@@ -12,10 +12,6 @@ export function pickMimeType(): string {
   return TYPES.find((t) => MediaRecorder.isTypeSupported(t)) ?? "";
 }
 
-export function micSupported(): boolean {
-  return typeof window !== "undefined" && window.isSecureContext && !!navigator.mediaDevices?.getUserMedia && typeof MediaRecorder !== "undefined";
-}
-
 export function useRecorder() {
   const [recording, setRecording] = useState(false);
   const recorder = useRef<MediaRecorder | null>(null);

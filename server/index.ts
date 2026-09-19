@@ -10,7 +10,7 @@ async function main() {
   const { default: next } = await import("next");
   const { Server } = await import("socket.io");
   const { VOICE } = await import("../lib/config");
-  const { getLLM } = await import("../lib/llm/provider");
+  const { getLLM, mockBanner, selectLLM } = await import("../lib/llm/provider");
   const { Rooms } = await import("./rooms");
   const { attachSockets, broadcastRoom } = await import("./socket");
   const { createVerifiedVoiceService } = await import("./voice");
@@ -26,9 +26,10 @@ async function main() {
   const server = createServer((req, res) => handle(req, res));
   const io = new Server(server, { maxHttpBufferSize: VOICE.maxAudioBytes + 64 * 1024, destroyUpgrade: false });
 
+  const llm = getLLM(); // throws if REQUIRE_NEBIUS=1 and the mock would be used
   const voice = await createVerifiedVoiceService();
   const rooms: InstanceType<typeof Rooms> = new Rooms({
-    llm: getLLM(),
+    llm,
     voice,
     publicUrl: process.env.PUBLIC_URL?.trim() || null,
     broadcast: (room) => broadcastRoom(io, rooms, room),
@@ -45,9 +46,13 @@ async function main() {
 
   server.listen(port, () => {
     console.log(`\n  AI Detective running on http://localhost:${port}`);
-    console.log(`  Detective model: ${getLLM().provider === "mock" ? "offline MOCK (set NEBIUS_API_KEY)" : "Nebius"}`);
-    console.log(`  Voice: ${voice.enabled ? "ElevenLabs" : "off (ELEVENLABS_API_KEY missing or rejected); players type answers"}`);
-    console.log(`  Phones: run a tunnel, e.g.  cloudflared tunnel --url http://localhost:${port}\n`);
+    if (llm.provider === "mock") console.warn(mockBanner(selectLLM().reason));
+    else console.log("  Detective model: Nebius (live)");
+    console.log(`  Voice mode: ${voice.mode === "agent" ? "agent (ElevenLabs Conversational AI)" : voice.mode === "stt-tts" ? "stt-tts fallback (recorder + text-to-speech)" : "text (players type)"}`);
+    for (const note of voice.notes) console.log(`    - ${note}`);
+    console.log(`  Public URL: ${process.env.PUBLIC_URL?.trim() || "(none set; open the host page through your HTTPS tunnel URL)"}`);
+    console.log("  Phones need HTTPS for the microphone: run `npm run tunnel` in another terminal.");
+    console.log("  Before a demo: npm run preflight\n");
   });
 }
 

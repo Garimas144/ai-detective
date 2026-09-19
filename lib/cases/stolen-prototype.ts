@@ -1,9 +1,10 @@
 import type { Case } from "../types";
 
 // Culprit: Dr. Elena Voss (C1).
-// Chain: master code at 21:14 (E1) + trained shutdown sequence (E2) narrow it to Elena or Marcus ->
-// Marcus's stairwell call is corroborated by Victor -> Priya says Elena sent her home and offered to
-// lock up -> Sam saw a heavy laptop bag at a silver hatchback at 21:25 -> the duck (E5) is Elena's joke.
+// The evidence alone does NOT name Elena: the master code (E1) fits four people and the shutdown log (E2) only
+// says the thief wanted Wren intact. Testimony decides it: Marcus's stairwell call is corroborated by Victor ->
+// Kenji was seen alone in the break room -> Priya says Elena sent her home and offered to lock up -> Sam saw a
+// heavy laptop bag at a silver hatchback at 21:25 -> the duck (E5) is Elena's joke (Priya and Tom know it).
 export const stolenPrototype: Case = {
   id: "stolen-prototype",
   title: "The Stolen Prototype",
@@ -16,16 +17,16 @@ export const stolenPrototype: Case = {
     {
       id: "E1",
       title: "Lab keypad log",
-      text: "The lab door was opened at 21:14 with a master code. Only two people have master codes: the CEO and the lead engineer.",
+      text: "The lab door was opened at 21:14 with a master code. Master codes are held by the CEO, the lead engineer, the night security desk (for emergencies) and the visiting firmware contractor (a temporary code).",
       kind: "key",
-      explanation: "Elena used her own master code. Marcus was on the phone in the stairwell at the time.",
+      explanation: "Elena used her own master code. Marcus was on the phone in the stairwell, Sam was on the phone with his daughter, and Kenji was debugging alone upstairs.",
     },
     {
       id: "E2",
       title: "Calibration rig log",
-      text: "Wren was powered down with its full six-step shutdown sequence at 21:12, before it was removed. Yanking it out would have fried it.",
+      text: "Wren was powered down with its full six-step shutdown sequence at 21:12, before it was removed. Yanking it out would have fried it. The sequence is in the launch runbook that most of the team can read.",
       kind: "key",
-      explanation: "Only someone trained on Wren knows the sequence. Elena designed it and wanted the hand intact.",
+      explanation: "The thief wanted Wren intact. Elena designed it and refused to see it damaged. Many people could have read the runbook, so this only shows care, not who.",
     },
     {
       id: "E3",
@@ -53,7 +54,7 @@ export const stolenPrototype: Case = {
     {
       id: "C1",
       name: "Dr. Elena Voss",
-      blurb: "Helix's lead engineer, who designed Wren",
+      blurb: "Helix's lead engineer",
       background: "You spent six years building Wren. It's the best work of your life.",
       relationship: "You co-founded the lab with Marcus but he now controls the company. You mentor Priya.",
       reasonPresent: "Final calibration of Wren before tomorrow's launch.",
@@ -195,7 +196,7 @@ export const stolenPrototype: Case = {
   truth:
     "Elena Voss stole Wren to stop Marcus from selling it as a weapon. She sent Priya home at 20:45, powered Wren down with the proper sequence at 21:12, opened the lab with her master code at 21:14, and carried Wren out in her laptop bag to her silver hatchback at 21:25, leaving the team duck as a goodbye. Marcus's missing fifteen minutes were a secret call to sell the patents, which is why he was evasive. Victor was hiding a meeting with Orbital. Sam's late round only looked suspicious.",
   chain: [
-    { id: "master-code", description: "Master code at 21:14 narrows it to Elena or Marcus", keywords: ["master code", "keypad", "21:14"] },
+    { id: "master-code", description: "Master code at 21:14 fits Elena, Marcus, Sam or Kenji", keywords: ["master code", "keypad", "21:14"] },
     { id: "sent-home", description: "Elena sent Priya home and offered to lock up", keywords: ["sent", "go home", "lock up", "lock the lab"] },
     { id: "garage", description: "Heavy laptop bag at a silver hatchback at 21:25", keywords: ["hatchback", "laptop bag", "garage", "boot", "21:25"] },
     { id: "duck", description: "The duck lives on Elena's desk", keywords: ["duck", "quacksworth"] },

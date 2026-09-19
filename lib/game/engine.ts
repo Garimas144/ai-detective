@@ -23,6 +23,7 @@ import type {
   Secrets,
   Settings,
   Turn,
+  TurnVoice,
 } from "../types";
 import { dealCharacters, type Rng } from "./deal";
 import { buildDetectiveView, detectiveName } from "./detectiveView";
@@ -191,6 +192,7 @@ async function recordTestimony(
   question: string | null,
   text: string,
   timedOut = false,
+  voice?: TurnVoice,
 ): Promise<Turn> {
   const c = getCase(state.caseId!);
   const player = state.players.find((p) => p.id === playerId)!;
@@ -204,6 +206,7 @@ async function recordTestimony(
     timedOut,
     evasive: timedOut,
     claimIds: [],
+    voice,
   };
   state.turns.push(turn);
   notify(state, deps);
@@ -362,7 +365,7 @@ function planRoundOne(state: GameState, planned: PlannedQuestion[]): PlannedQues
   for (const q of planned) if (!out.some((x) => x.targetPlayerId === q.targetPlayerId)) out.push(q);
   for (const p of state.players)
     if (!out.some((x) => x.targetPlayerId === p.id))
-      out.push({ targetPlayerId: p.id, text: `${p.characterName}, take me through exactly where you were and who you saw during the key window.` });
+      out.push({ targetPlayerId: p.id, text: `${detectiveName(p)}, take me through exactly where you were and who you saw during the key window.` });
   return out;
 }
 
@@ -411,7 +414,8 @@ async function review(state: GameState, deps: EngineDeps, final: boolean): Promi
   if (nextRound === 1) return { plan: planRoundOne(state, plan), endEarly: false };
   if (!plan.length && !endEarly) {
     const suspect = topSuspect(computeProfiles(state, weightsOf(deps)));
-    const name = state.players.find((p) => p.id === suspect)?.characterName ?? "";
+    const suspectPlayer = state.players.find((p) => p.id === suspect);
+    const name = suspectPlayer ? detectiveName(suspectPlayer) : "";
     plan = [{ targetPlayerId: suspect, text: `${name}, is there anything in your account you'd like to correct before I go on?` }];
   }
   return { plan: plan.slice(0, questionsForNextRound), endEarly };
@@ -441,14 +445,22 @@ async function endRound(state: GameState, deps: EngineDeps) {
   askNext(state, deps);
 }
 
-export async function submitAnswer(state: GameState, deps: EngineDeps, playerId: string | null, text: string, opts: { timedOut?: boolean } = {}) {
+export async function submitAnswer(
+  state: GameState,
+  deps: EngineDeps,
+  playerId: string | null,
+  text: string,
+  opts: { timedOut?: boolean; voice?: TurnVoice } = {},
+) {
   requirePhase(state, "INTERROGATION");
   const q = state.current;
   if (!q) throw new Error("No question is waiting for an answer.");
   if (playerId && playerId !== q.targetPlayerId) throw new Error("This question isn't for you.");
   const late = nowOf(deps) > q.deadline + GAME.answerGraceSeconds * 1000;
   state.current = null;
-  await recordTestimony(state, deps, q.targetPlayerId, "answer", q.text, text, !!opts.timedOut || late);
+  const voice = opts.voice ?? (text.trim() ? { mode: "typed" as const, transcriptSource: "typed" as const } : undefined);
+  if (voice) voice.answerMs = nowOf(deps) - q.askedAt;
+  await recordTestimony(state, deps, q.targetPlayerId, "answer", q.text, text, !!opts.timedOut || late, voice);
   if (state.roundQueue.length && state.questionsAsked < maxQuestions(state)) askNext(state, deps);
   else await endRound(state, deps);
 }
@@ -484,7 +496,8 @@ async function finish(state: GameState, deps: EngineDeps, reason: EndReason) {
   } catch (err) {
     state.error = err instanceof Error ? err.message : String(err);
     const suspect = topSuspect(profiles);
-    const name = state.players.find((p) => p.id === suspect)?.characterName ?? "";
+    const suspectPlayer = state.players.find((p) => p.id === suspect);
+    const name = suspectPlayer ? detectiveName(suspectPlayer) : "";
     state.accusation = {
       accusedPlayerId: suspect,
       confidence: 0.5,

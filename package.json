@@ -9,14 +9,17 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "models": "tsx scripts/list-models.ts",
-    "sim": "tsx lib/sim/runner.ts",
-    "sim:sweep": "tsx lib/sim/sweep.ts",
-    "tunnel": "cloudflared tunnel --url http://localhost:3000",
-    "tunnel:ngrok": "ngrok http 3000",
+    "tunnel": "node scripts/tunnel.mjs",
+    "tunnel:ngrok": "node scripts/tunnel.mjs ngrok",
     "voice:check": "tsx scripts/voice-check.ts",
-    "setup:elevenlabs": "node scripts/setup-elevenlabs-secret.mjs"
+    "setup:elevenlabs": "node scripts/setup-elevenlabs-secret.mjs",
+    "demo": "REQUIRE_NEBIUS=1 tsx server/index.ts",
+    "preflight": "tsx scripts/preflight.ts",
+    "setup:agent": "tsx scripts/setup-elevenlabs-agent.ts",
+    "difficulty": "tsx scripts/evidence-only-check.ts"
   },
   "dependencies": {
+    "@elevenlabs/react": "^1.15.2",
     "next": "14.2",
     "openai": "^4.104.0",
     "qrcode": "^1.5.4",

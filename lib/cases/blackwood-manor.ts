@@ -1,9 +1,10 @@
 import type { Case } from "../types";
 
 // Culprit: Dr. Alistair Finch (C1).
-// Chain: half-burned letter threatens the Medical Council (E1) + digitalis, which nobody in the house is
-// prescribed (E2) -> Margaret saw Finch enter the study 21:50-22:00 -> Mrs. Hodge gave him matches at
-// 22:25 -> the Colonel says Finch left the card game twice.
+// The evidence alone does NOT name Finch: the note (E1) threatens "the authorities" (Finch, Thorne and Jasper all
+// have something to fear) and digitalis (E2) is also made from the kitchen-garden foxgloves. Testimony decides it:
+// Margaret saw Finch enter the study 21:50-22:00 -> Mrs. Hodge gave him matches at 22:25 -> the Colonel says Finch
+// left the card game twice -> Thorne was turned away at the study door by Finch.
 export const blackwoodManor: Case = {
   id: "blackwood-manor",
   title: "Murder at Blackwood Manor",
@@ -16,16 +17,16 @@ export const blackwoodManor: Case = {
     {
       id: "E1",
       title: "Half-burned note",
-      text: "A half-burned letter in the study fireplace, in Lord Blackwood's handwriting: '...if you do not stop at once, I shall inform the Medical Council on Monday. E.B.'",
+      text: "A half-burned letter in the study fireplace, in Lord Blackwood's handwriting: '...if you do not stop at once, I shall go to the authorities on Monday. I mean it. E.B.'",
       kind: "key",
-      explanation: "Edmund's letter to Dr. Finch, threatening to expose his forged prescriptions. Finch tried to burn it, but the fire was dying.",
+      explanation: "Edmund's letter to Dr. Finch, threatening to report his forged prescriptions to the Medical Council. Finch tried to burn it, but the fire was dying. It could equally have been read as aimed at Thorne (overbilling) or Jasper (debts).",
     },
     {
       id: "E2",
       title: "Broken brandy glass",
-      text: "A broken brandy glass beside the desk. The spilled brandy contains digitalis, a prescription heart drug. Nobody in the household is prescribed it.",
+      text: "A broken brandy glass beside the desk. The spilled brandy contains digitalis. It is a heart medicine, and it is also made from the foxgloves that grow in the kitchen garden.",
       kind: "key",
-      explanation: "Finch carries digitalis in his medical bag. He dosed the brandy during his 'consultation' at 21:50.",
+      explanation: "Finch carries digitalis in his medical bag. He dosed the brandy during his 'consultation' at 21:50. The foxgloves were a red herring inside a key clue: anyone could have used them.",
     },
     {
       id: "E3",
@@ -195,7 +196,7 @@ export const blackwoodManor: Case = {
   truth:
     "Dr. Alistair Finch poisoned Lord Blackwood with digitalis from his own bag during a 21:50 'consultation', because Edmund was about to report his forged prescriptions. At 22:25 he borrowed matches from Mrs. Hodge and tried to burn Edmund's letter, but it only half burned. The stopped clock simply ran down, the muddy footprint and the open French window were Jasper sneaking out to pay his bookie, and the chicken was Mrs. Hodge's hen, who wandered in through that window.",
   chain: [
-    { id: "letter", description: "Letter threatening the Medical Council", keywords: ["medical council", "letter", "note", "burn"] },
+    { id: "letter", description: "Letter threatening to go to the authorities", keywords: ["authorities", "letter", "note", "burn"] },
     { id: "digitalis", description: "Digitalis is a doctor's drug", keywords: ["digitalis", "bag", "prescription"] },
     { id: "study", description: "Seen entering the study 21:50-22:00", keywords: ["21:50", "study", "pale", "consultation"] },
     { id: "matches", description: "Borrowed matches at 22:25 and left the game twice", keywords: ["matches", "22:25", "smoke", "left twice", "card"] },

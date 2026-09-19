@@ -27,9 +27,9 @@ import {
 } from "../lib/game/engine";
 import type { LLMClient } from "../lib/llm/types";
 import type { HostAction, PlayerAction } from "../lib/protocol";
-import type { GameState, Secrets } from "../lib/types";
+import type { GameState, Secrets, TurnVoice } from "../lib/types";
 import type { ViewContext } from "./views";
-import { readAloudMs, type VoiceService } from "./voice";
+import { questionLeadMs, type VoiceService } from "./voice";
 
 export interface Connection {
   id: string; // socket id
@@ -45,7 +45,9 @@ export interface Room {
   playerTokens: Map<string, string>; // token -> playerId
   connections: Map<string, Connection>;
   timer: { askedAt: number; handle: ReturnType<typeof setTimeout>; extraWaits: number } | null;
-  receivingAudioFor: number | null; // askedAt of a question whose voice answer is being transcribed
+  receivingAudioFor: number | null; // askedAt of a question whose voice answer is being transcribed or verified
+  /** Agent sessions we issued: one per (player, question), single use. */
+  agentSessions: Map<string, { playerId: string; askedAt: number; conversationId?: string }>;
   pendingAlibis: Set<Promise<void>>;
   ttsCache: Map<string, { audio: Buffer; mimeType: string }>;
 }
@@ -75,7 +77,7 @@ export class Rooms {
       state: room.state,
       secrets: room.secrets,
       llmProvider: this.opts.llm.provider,
-      voiceEnabled: this.opts.voice.enabled,
+      voiceMode: this.opts.voice.mode,
       publicUrl: this.opts.publicUrl,
     };
   }
@@ -85,7 +87,7 @@ export class Rooms {
       llm: this.opts.llm,
       rng: this.opts.rng ?? Math.random,
       onChange: () => this.changed(room),
-      questionLeadMs: this.opts.voice.enabled ? readAloudMs : undefined,
+      questionLeadMs: questionLeadMs(this.opts.voice.mode),
     };
   }
 
@@ -111,6 +113,7 @@ export class Rooms {
       connections: new Map(),
       timer: null,
       receivingAudioFor: null,
+      agentSessions: new Map(),
       pendingAlibis: new Set(),
       ttsCache: new Map(),
     };
@@ -247,8 +250,9 @@ export class Rooms {
     this.changed(room);
   }
 
-  /** A recorded spoken answer: transcribe with ElevenLabs, then treat the text as testimony. */
+  /** stt-tts fallback: a recorded spoken answer is transcribed with ElevenLabs, then stored as testimony. */
   async voiceAnswer(room: Room, playerId: string, audio: Buffer, mimeType: string, timedOut: boolean) {
+    if (this.opts.voice.mode === "text") throw new Error("Voice is off. Type your answer instead.");
     this.requireTurn(room, playerId);
     const askedAt = room.state.current!.askedAt;
     room.receivingAudioFor = askedAt;
@@ -259,13 +263,78 @@ export class Rooms {
       room.receivingAudioFor = null;
     }
     if (room.state.current?.askedAt !== askedAt) throw new Error("Too late: the detective has moved on.");
-    await this.exclusive(room, () => submitAnswer(room.state, this.deps(room), playerId, text, { timedOut }));
+    const voice: TurnVoice = { mode: "stt-tts", transcriptSource: "stt", segments: text ? [text] : [] };
+    await this.exclusive(room, () => submitAnswer(room.state, this.deps(room), playerId, text, { timedOut, voice }));
+    return text;
+  }
+
+  // ---------- Conversational agent mode ----------
+
+  private sessionKey = (playerId: string, askedAt: number) => `${playerId}:${askedAt}`;
+
+  /**
+   * A short-lived credential for ONE agent conversation, and only for the player being questioned right now.
+   * Returns the question (already public) as a dynamic variable. Never returns the ElevenLabs API key.
+   */
+  async agentToken(room: Room, playerId: string) {
+    if (this.opts.voice.mode !== "agent") throw new Error("Conversational voice is not available.");
+    this.requireTurn(room, playerId);
+    const q = room.state.current!;
+    const key = this.sessionKey(playerId, q.askedAt);
+    if (room.agentSessions.has(key)) throw new Error("A voice session was already started for this question.");
+    const { token, conversationId } = await this.opts.voice.getConversationToken();
+    if (room.state.current?.askedAt !== q.askedAt) throw new Error("Too late: the detective has moved on.");
+    room.agentSessions.set(key, { playerId, askedAt: q.askedAt, conversationId });
+    return { token, conversationId, question: q.text, deadline: q.deadline };
+  }
+
+  /**
+   * The phone reports what the player said in their agent conversation. We accept it only for the session we
+   * issued for this player and this question (single use), prefer ElevenLabs' own record of the user's speech
+   * when it is available, and store the final wording as testimony. The agent's replies are never testimony.
+   */
+  async agentAnswer(room: Room, playerId: string, input: { conversationId?: string; segments: string[]; timedOut: boolean }) {
+    this.requireTurn(room, playerId);
+    const q = room.state.current!;
+    const key = this.sessionKey(playerId, q.askedAt);
+    const session = room.agentSessions.get(key);
+    if (!session) throw new Error("No voice session was started for this question.");
+    if (session.conversationId && input.conversationId && session.conversationId !== input.conversationId) throw new Error("That voice session isn't for this question.");
+    room.agentSessions.delete(key); // single use: one question, one answer
+
+    const reported = input.segments.map((x) => String(x).trim()).filter(Boolean).slice(0, 40);
+    const conversationId = session.conversationId ?? input.conversationId;
+    let segments = reported;
+    let transcriptSource: TurnVoice["transcriptSource"] = "client-reported";
+    room.receivingAudioFor = q.askedAt;
+    try {
+      const official = conversationId ? await this.opts.voice.getUserUtterances(conversationId).catch(() => null) : null;
+      if (official && official.length) {
+        segments = official;
+        transcriptSource = "elevenlabs-api";
+      }
+    } finally {
+      room.receivingAudioFor = null;
+    }
+    if (room.state.current?.askedAt !== q.askedAt) throw new Error("Too late: the detective has moved on.");
+    const text = segments.join(" ").replace(/\s+/g, " ").trim();
+    const voice: TurnVoice = { mode: "agent", transcriptSource, conversationId, segments };
+    try {
+      await this.exclusive(room, () => submitAnswer(room.state, this.deps(room), playerId, text, { timedOut: input.timedOut, voice }));
+    } catch (err) {
+      // e.g. the detective was busy: give the player their session back so they can retry within their time.
+      if (room.state.current?.askedAt === q.askedAt) room.agentSessions.set(key, session);
+      throw err;
+    }
     return text;
   }
 
   /** Detective speech for the shared screen. Only public text (the current question or the accusation). */
   async tts(room: Room, kind: "question" | "accusation") {
     const s = room.state;
+    if (this.opts.voice.mode === "text") throw new Error("Voice is off.");
+    // In agent mode the player's phone speaks the question through the agent, so the host must not repeat it.
+    if (kind === "question" && this.opts.voice.mode === "agent") throw new Error("The agent speaks questions on the player's phone.");
     const key = kind === "question" ? `q:${s.current?.askedAt}` : "accusation";
     const text = kind === "question" ? s.current?.text : s.accusation?.reasoning;
     if (!text) throw new Error("Nothing to say right now.");

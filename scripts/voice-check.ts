@@ -1,11 +1,12 @@
 // Round-trips one short phrase through ElevenLabs TTS and STT to confirm the key and models work.
 // Usage: npm run voice:check   (uses ELEVENLABS_API_KEY from .env.local; costs a few credits)
 import { loadEnvConfig } from "@next/env";
-import { createVoiceService } from "../server/voice";
+import { createVerifiedVoiceService } from "../server/voice";
 loadEnvConfig(process.cwd());
 async function main() {
-  const v = createVoiceService();
-  console.log("enabled:", v.enabled);
+  const v = await createVerifiedVoiceService();
+  console.log("voice mode:", v.mode, v.notes.join(" "));
+  if (v.mode === "text") throw new Error("Voice is off, see the note above.");
   const t0 = Date.now();
   const { audio, mimeType } = await v.speak("Dr. Finch, where were you at ten o'clock?");
   console.log("TTS:", mimeType, audio.length, "bytes in", Date.now() - t0, "ms");

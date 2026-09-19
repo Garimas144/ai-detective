@@ -1,6 +1,10 @@
 #!/usr/bin/env node
-// One-time setup: store the Nebius API key as an ElevenLabs Workspace Secret named NEBIUS_API_KEY, so an
-// ElevenLabs agent can call Nebius (as its Custom LLM) without the key ever reaching a browser.
+// OPTIONAL setup. Stores the Nebius API key as an ElevenLabs Workspace Secret named NEBIUS_API_KEY.
+//
+// The running game does NOT need this: the game server calls Nebius directly with NEBIUS_API_KEY for all
+// reasoning. The workspace secret is only used if you want the ElevenLabs agent's own LLM to be Nebius too
+// (`npm run setup:agent -- --nebius-llm`), so that ElevenLabs can authenticate to Nebius without the key ever
+// reaching a browser. Skip this script otherwise.
 //
 //   npm run setup:elevenlabs            create the secret, or reuse it if it already exists
 //   npm run setup:elevenlabs -- --update   overwrite the existing secret's value with the current NEBIUS_API_KEY
@@ -130,7 +134,7 @@ async function main() {
 
   saveSecretId(secretId);
   console.log(`  Saved as ELEVENLABS_NEBIUS_SECRET_ID in .env.local.`);
-  console.log(`\nNext: point your ElevenLabs agent's Custom LLM at Nebius and select this secret as its API key.`);
+  console.log(`\nNext (optional): npm run setup:agent -- --nebius-llm   to make the agent's own LLM Nebius, using this secret.`);
 }
 
 main().catch((err) => fail(err instanceof Error ? err.message : String(err)));

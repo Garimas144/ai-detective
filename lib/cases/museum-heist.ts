@@ -1,9 +1,10 @@
 import type { Case } from "../types";
 
 // Culprit: Rafael Moreno (C2).
-// Chain: case alarm put in maintenance mode with the restoration card (E1) -> conservator's wax on the
-// latch (E2) -> Dana approved maintenance mode at Rafael's request -> Theo saw Rafael hurrying from the
-// Egyptian wing wiping his hands at 20:20.
+// The evidence alone does NOT name Rafael: the alarm card (E1) could belong to curatorial, restoration, security
+// or IT, and the wax (E2) is used by curatorial staff too. Testimony decides it: Dana approved maintenance mode
+// at Rafael's request -> Theo saw Rafael hurrying from the Egyptian wing wiping his hands at 20:20 ->
+// Marguerite smelled wax by the wing at 20:00 and saw Rafael sitting very still at 20:25.
 export const museumHeist: Case = {
   id: "museum-heist",
   title: "The Museum Heist",
@@ -16,16 +17,16 @@ export const museumHeist: Case = {
     {
       id: "E1",
       title: "Alarm log",
-      text: "The Scarab case alarm was switched to 'maintenance mode' from 20:05 to 20:25, using the restoration department's access card.",
+      text: "The Scarab case alarm was switched to 'maintenance mode' from 20:05 to 20:25 with a collections-wing staff card. The log records the card type, not whose it was. Cards like this are issued to curatorial, restoration, security and IT staff.",
       kind: "key",
-      explanation: "Rafael used his own restoration card after asking Dana to approve maintenance mode for a 'scheduled wax treatment'.",
+      explanation: "Rafael used his own restoration card after asking Dana to approve maintenance mode for a 'scheduled wax treatment'. Beatrice, Dana and Oscar hold the same card type.",
     },
     {
       id: "E2",
       title: "Wax on the latch",
-      text: "Fresh smudges of microcrystalline conservator's wax on the Scarab case latch. The wax is only used in restoration work.",
+      text: "Fresh smudges of microcrystalline conservator's wax on the Scarab case latch. Curatorial staff use the same wax to polish display cases, and restoration staff use it on objects.",
       kind: "key",
-      explanation: "Rafael had wax on his fingers from the workshop when he opened the latch.",
+      explanation: "Rafael had wax on his fingers from the workshop when he opened the latch. Beatrice also handles the wax, which is why it does not point at one person.",
     },
     {
       id: "E3",
@@ -193,7 +194,7 @@ export const museumHeist: Case = {
   truth:
     "Rafael Moreno stole the Golden Scarab to pay off a collector he forges for. He talked Dana into approving maintenance mode, switched off the case alarm with his restoration card at 20:05, opened the latch with wax still on his fingers, and hid the brooch in a hollow plaster cast in his workshop. Beatrice was hiding a cracked case, Lady Imogen was hiding that she's broke, and Theo was an undercover journalist whose wanderings, torn glove and propped door (hello, pigeon) made him look guilty.",
   chain: [
-    { id: "alarm", description: "Maintenance mode with the restoration card", keywords: ["maintenance", "restoration card", "alarm", "20:05"] },
+    { id: "alarm", description: "Maintenance mode with a collections-wing card", keywords: ["maintenance", "card", "alarm", "20:05"] },
     { id: "wax", description: "Conservator's wax on the latch", keywords: ["wax", "latch"] },
     { id: "request", description: "Dana approved Rafael's request", keywords: ["approve", "request", "wax treatment", "schedule"] },
     { id: "sighting", description: "Theo saw Rafael leaving the wing wiping his hands", keywords: ["wiping", "hands", "20:20", "workshop"] },

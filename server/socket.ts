@@ -102,6 +102,27 @@ export function attachSockets(io: Server, rooms: Rooms) {
     );
 
     socket.on(
+      EVENTS.agentToken,
+      handle(async () => {
+        const { room, playerId } = requirePlayer();
+        return { ...(await rooms.agentToken(room, playerId)) };
+      }),
+    );
+
+    socket.on(
+      EVENTS.agentAnswer,
+      handle(async ({ conversationId, segments, timedOut }: { conversationId?: string; segments: string[]; timedOut?: boolean }) => {
+        const { room, playerId } = requirePlayer();
+        const transcript = await rooms.agentAnswer(room, playerId, {
+          conversationId: conversationId ? String(conversationId) : undefined,
+          segments: Array.isArray(segments) ? segments : [],
+          timedOut: !!timedOut,
+        });
+        return { transcript };
+      }),
+    );
+
+    socket.on(
       EVENTS.tts,
       handle(async ({ kind }: { kind: "question" | "accusation" }) => {
         const { audio, mimeType } = await rooms.tts(requireHost(), kind === "accusation" ? "accusation" : "question");

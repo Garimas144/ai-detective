@@ -1,9 +1,10 @@
 import type { Case } from "../types";
 
 // Culprit: Leon Marchetti (C1).
-// Chain: compartment 7's spare key missing 00:30-01:00 and found in the dining car sugar bowl (E1) +
-// violin bow hair on the door latch (E2) -> Anya saw Leon loitering by the key hook at 00:30 -> Clara
-// heard a thud at 00:42 and someone humming in the corridor -> Barnaby saw Leon return at 00:50.
+// The evidence alone does NOT name Leon: the white hairs (E2) could be a violin bow or Barnaby's stage wig, and the
+// key in the sugar bowl (E1) only points at the dining car crowd. Testimony decides it: Anya saw Leon loitering by
+// the key hook at 00:30 -> Clara heard a thud at 00:42 and someone humming -> Barnaby and Ines saw Leon return
+// to the dining car at about 00:50 -> Father Tomas saw Leon walking toward the sleeping carriages at 00:35.
 export const nightTrain: Case = {
   id: "night-train",
   title: "Murder on the Night Train",
@@ -23,9 +24,9 @@ export const nightTrain: Case = {
     {
       id: "E2",
       title: "Horsehair on the latch",
-      text: "A few long white horsehairs were caught in compartment 7's door latch.",
+      text: "A few long white hairs were caught in compartment 7's door latch. They could be horsehair, or hair from a stage wig.",
       kind: "key",
-      explanation: "Violin bow hair. Leon's bow was tucked under his arm when he forced the latch.",
+      explanation: "Violin bow hair. Leon's bow was tucked under his arm when he forced the latch. Barnaby's white stage wig made him an equally good suspect on this clue alone.",
     },
     {
       id: "E3",
@@ -117,7 +118,7 @@ export const nightTrain: Case = {
       relationship: "You performed for the dining car tonight, after Leon played.",
       reasonPresent: "Heading to a magicians' convention in Budapest.",
       motive: "You're good with locks and misdirection, and your pension is tiny.",
-      suspicious: "Everyone knows you can pick a lock. The goldfish is yours.",
+      suspicious: "Everyone knows you can pick a lock. You wear a long white wig on stage. The goldfish is yours.",
       secret: null,
       knows: [
         "You stayed in the dining car practising card tricks from 00:00 until about 01:00.",
@@ -194,7 +195,7 @@ export const nightTrain: Case = {
     "Leon Marchetti killed Viktor Sorel to take back the blue diamond Viktor cheated his grandfather out of. He lifted the spare key from Anya's station at 00:30, struck Viktor during the tunnel, and left bow hair on the latch. He hummed on his way back, where Clara heard him, then dropped the key in the sugar bowl at 00:50, which Barnaby saw. The diamond is in his violin case lining. Clara's torn passport was about escaping her family, and the goldfish was Barnaby's forgotten trick.",
   chain: [
     { id: "key", description: "Spare key lifted at 00:30 and found in the sugar bowl", keywords: ["key", "hook", "sugar bowl", "00:30"] },
-    { id: "bow", description: "White horsehair from a violin bow", keywords: ["horsehair", "bow", "violin"] },
+    { id: "bow", description: "White hair: violin bow or a stage wig", keywords: ["hair", "horsehair", "bow", "violin", "wig"] },
     { id: "humming", description: "Thud at 00:42 then humming", keywords: ["hum", "thud", "00:42", "tune"] },
     { id: "return", description: "Returned to the dining car at 00:50", keywords: ["00:50", "dining car", "breathing hard"] },
   ],
