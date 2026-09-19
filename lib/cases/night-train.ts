@@ -3,8 +3,8 @@ import type { Case } from "../types";
 // Culprit: Leon Marchetti (C1).
 // The evidence alone does NOT name Leon: the white hairs (E2) could be a violin bow or Barnaby's stage wig, and the
 // key in the sugar bowl (E1) only points at the dining car crowd. Testimony decides it: Anya saw Leon loitering by
-// the key hook at 00:30 -> Clara heard a thud at 00:42 and someone humming -> Barnaby and Ines saw Leon return
-// to the dining car at about 00:50 -> Father Tomas saw Leon walking toward the sleeping carriages at 00:35.
+// the key hook at 12:30 AM -> Clara heard a thud at 12:42 AM and someone humming -> Barnaby and Ines saw Leon return
+// to the dining car at about 12:50 AM -> Father Tomas saw Leon walking toward the sleeping carriages at 12:35 AM.
 export const nightTrain: Case = {
   id: "night-train",
   title: "Murder on the Night Train",
@@ -12,14 +12,14 @@ export const nightTrain: Case = {
     "Somewhere between Vienna and Budapest, the jewel dealer Viktor Sorel was found dead in sleeping compartment 7, and his famous blue diamond was gone. The train didn't stop all night. The killer is still aboard.",
   setting: "The Danube Express sleeper train, overnight",
   victim: "Viktor Sorel, jewel dealer",
-  timeline: { start: "23:30", end: "01:30" },
+  timeline: { start: "11:30 PM", end: "1:30 AM" },
   evidence: [
     {
       id: "E1",
       title: "Missing spare key",
-      text: "The conductor's spare key for compartment 7 was missing from its hook between 00:30 and 01:00. It turned up in the dining car's sugar bowl.",
+      text: "The conductor's spare key for compartment 7 was missing from its hook between 12:30 AM and 1:00 AM. It turned up in the dining car's sugar bowl.",
       kind: "key",
-      explanation: "Leon lifted it at 00:30 while chatting to Anya, and dropped it in the sugar bowl when he returned at 00:50.",
+      explanation: "Leon lifted it at 12:30 AM while chatting to Anya, and dropped it in the sugar bowl when he returned at 12:50 AM.",
     },
     {
       id: "E2",
@@ -31,7 +31,7 @@ export const nightTrain: Case = {
     {
       id: "E3",
       title: "The tunnel",
-      text: "The train passed through the long Semmering tunnel from 00:38 to 00:46. The corridor lights flickered off the whole way.",
+      text: "The train passed through the long Semmering tunnel from 12:38 AM to 12:46 AM. The corridor lights flickered off the whole way.",
       kind: "ambiguous",
       explanation: "It gave the killer cover, but it also means nobody's sightings in that window are reliable.",
     },
@@ -67,9 +67,9 @@ export const nightTrain: Case = {
       ],
       culprit: true,
       whatYouDid: [
-        "At 00:30 you chatted to Anya the conductor at her station and lifted the spare key for compartment 7 from the hook.",
-        "When the train entered the tunnel at 00:38, you went to compartment 7 with your bow under your arm. Viktor woke and struggled, and you struck him. You took the diamond.",
-        "You hummed to steady your nerves as you walked back. You returned to the dining car at about 00:50 and dropped the key in the sugar bowl.",
+        "At 12:30 AM you chatted to Anya the conductor at her station and lifted the spare key for compartment 7 from the hook.",
+        "When the train entered the tunnel at 12:38 AM, you went to compartment 7 with your bow under your arm. Viktor woke and struggled, and you struck him. You took the diamond.",
+        "You hummed to steady your nerves as you walked back. You returned to the dining car at about 12:50 AM and dropped the key in the sugar bowl.",
         "The diamond is hidden in the lining of your violin case.",
       ],
       looseEnds: [
@@ -86,11 +86,11 @@ export const nightTrain: Case = {
       relationship: "You look after everyone aboard. Viktor tipped badly.",
       reasonPresent: "Working the night shift.",
       motive: "Viktor complained about you to the rail company last month.",
-      suspicious: "The spare key went missing from your station and you didn't notice until morning, because you dozed off there from about 00:35 to 01:00.",
+      suspicious: "The spare key went missing from your station and you didn't notice until morning, because you dozed off there from about 12:35 AM to 1:00 AM.",
       secret: null,
       knows: [
-        "At about 00:30 Leon the violinist stood by your key hook chatting about arrival times for longer than necessary.",
-        "Viktor asked you at 23:40 not to disturb him before morning.",
+        "At about 12:30 AM Leon the violinist stood by your key hook chatting about arrival times for longer than necessary.",
+        "Viktor asked you at 11:40 PM not to disturb him before morning.",
       ],
       culprit: false,
     },
@@ -105,7 +105,7 @@ export const nightTrain: Case = {
       suspicious: "You're right next door to compartment 7. The torn passport page is yours.",
       secret: "You're travelling under a false name to escape your family. You tore your real name out of your passport. If it comes out, they'll find you.",
       knows: [
-        "At about 00:42, in the tunnel, you heard a heavy thud from compartment 7, then someone humming a tune in the corridor.",
+        "At about 12:42 AM, in the tunnel, you heard a heavy thud from compartment 7, then someone humming a tune in the corridor.",
         "You didn't open your door. You were too scared.",
       ],
       culprit: false,
@@ -121,8 +121,8 @@ export const nightTrain: Case = {
       suspicious: "Everyone knows you can pick a lock. You wear a long white wig on stage. The goldfish is yours.",
       secret: null,
       knows: [
-        "You stayed in the dining car practising card tricks from 00:00 until about 01:00.",
-        "At about 00:50 Leon came back into the dining car from the sleeping carriages, breathing hard, and sat down next to the sugar bowl.",
+        "You stayed in the dining car practising card tricks from 12:00 AM until about 1:00 AM.",
+        "At about 12:50 AM Leon came back into the dining car from the sleeping carriages, breathing hard, and sat down next to the sugar bowl.",
       ],
       culprit: false,
     },
@@ -137,7 +137,7 @@ export const nightTrain: Case = {
       suspicious: "You had access to Viktor at any time, and you're his closest contact.",
       secret: "You've been skimming money from Viktor's accounts for years. Any look at his finances will expose you.",
       knows: [
-        "At 23:45 Viktor told you he was expecting a visitor about 'a family matter from the old days', and laughed about it.",
+        "At 11:45 PM Viktor told you he was expecting a visitor about 'a family matter from the old days', and laughed about it.",
         "You were in your compartment, number 3, from midnight onwards.",
       ],
       culprit: false,
@@ -153,7 +153,7 @@ export const nightTrain: Case = {
       suspicious: "You wandered the corridors during the night.",
       secret: "You're not only travelling for the conference. You're delivering a large cash donation you've been quietly skimming from for years to pay gambling debts.",
       knows: [
-        "At about 00:35 you saw Leon walk from the conductor's station toward the sleeping carriages with his violin bow under his arm.",
+        "At about 12:35 AM you saw Leon walk from the conductor's station toward the sleeping carriages with his violin bow under his arm.",
         "Clara looked frightened at dinner whenever anyone asked her name.",
       ],
       culprit: false,
@@ -169,8 +169,8 @@ export const nightTrain: Case = {
       suspicious: "You had keys to every cupboard in the dining car.",
       secret: null,
       knows: [
-        "Leon left the dining car at about 00:25 and came back at about 00:50, flushed.",
-        "When you cleared tables at 01:05 you found the sugar bowl lid askew.",
+        "Leon left the dining car at about 12:25 AM and came back at about 12:50 AM, flushed.",
+        "When you cleared tables at 1:05 AM you found the sugar bowl lid askew.",
       ],
       culprit: false,
     },
@@ -182,21 +182,21 @@ export const nightTrain: Case = {
       relationship: "You've done deals with Viktor before, and lost money on them.",
       reasonPresent: "A business trip.",
       motive: "Viktor cheated you on a diamond deal last year.",
-      suspicious: "You had a loud argument with Viktor in the corridor at 23:50.",
+      suspicious: "You had a loud argument with Viktor in the corridor at 11:50 PM.",
       secret: null,
       knows: [
-        "You argued with Viktor at 23:50 about an old deal, then went to your compartment and stayed there.",
+        "You argued with Viktor at 11:50 PM about an old deal, then went to your compartment and stayed there.",
         "Your compartment is at the far end of the carriage. You heard nothing in the tunnel.",
       ],
       culprit: false,
     },
   ],
   truth:
-    "Leon Marchetti killed Viktor Sorel to take back the blue diamond Viktor cheated his grandfather out of. He lifted the spare key from Anya's station at 00:30, struck Viktor during the tunnel, and left bow hair on the latch. He hummed on his way back, where Clara heard him, then dropped the key in the sugar bowl at 00:50, which Barnaby saw. The diamond is in his violin case lining. Clara's torn passport was about escaping her family, and the goldfish was Barnaby's forgotten trick.",
+    "Leon Marchetti killed Viktor Sorel to take back the blue diamond Viktor cheated his grandfather out of. He lifted the spare key from Anya's station at 12:30 AM, struck Viktor during the tunnel, and left bow hair on the latch. He hummed on his way back, where Clara heard him, then dropped the key in the sugar bowl at 12:50 AM, which Barnaby saw. The diamond is in his violin case lining. Clara's torn passport was about escaping her family, and the goldfish was Barnaby's forgotten trick.",
   chain: [
-    { id: "key", description: "Spare key lifted at 00:30 and found in the sugar bowl", keywords: ["key", "hook", "sugar bowl", "00:30"] },
+    { id: "key", description: "Spare key lifted at 12:30 AM and found in the sugar bowl", keywords: ["key", "hook", "sugar bowl", "12:30 AM"] },
     { id: "bow", description: "White hair: violin bow or a stage wig", keywords: ["hair", "horsehair", "bow", "violin", "wig"] },
-    { id: "humming", description: "Thud at 00:42 then humming", keywords: ["hum", "thud", "00:42", "tune"] },
-    { id: "return", description: "Returned to the dining car at 00:50", keywords: ["00:50", "dining car", "breathing hard"] },
+    { id: "humming", description: "Thud at 12:42 AM then humming", keywords: ["hum", "thud", "12:42 AM", "tune"] },
+    { id: "return", description: "Returned to the dining car at 12:50 AM", keywords: ["12:50 AM", "dining car", "breathing hard"] },
   ],
 };

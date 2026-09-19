@@ -28,15 +28,15 @@ Record things such as: claimed locations, claimed times, who the speaker says th
 
 Rules:
 - One checkable assertion per claim. Split compound sentences.
-- "statement" MUST be phrased as testimony in third person: "Marcus says he was in the stairwell from 21:05 to 21:20." Never state it as fact.
-- Record implausible or absurd statements exactly as said ("Jess says she flew to the moon at 22:00"). Do not correct or reinterpret them.
+- "statement" MUST be phrased as testimony in third person: "Marcus says he was in the stairwell from 9:05 PM to 9:20 PM." Never state it as fact.
+- Record implausible or absurd statements exactly as said ("Jess says she flew to the moon at 10:00 PM"). Do not correct or reinterpret them.
 - "subject" is who the claim is about. Use character names.
-- Times in 24-hour HH:MM when given or clearly implied, otherwise null. "location" is a short place name or null.
+- Times in 12-hour form like "9:05 PM" or "12:30 AM" (convert 24-hour times a player gives), when given or clearly implied, otherwise null. Never write 24-hour times. "location" is a short place name or null.
 - "aboutPlayerIds" lists the ids of OTHER people being questioned whom this claim is about, or [].
 - "evasive" is true only for a spoken answer that dodges or refuses what was asked.
 
 Reply with JSON only:
-{"claims":[{"subject":string,"location":string|null,"timeStart":"HH:MM"|null,"timeEnd":"HH:MM"|null,"aboutPlayerIds":[string],"statement":string}],"evasive":boolean}`;
+{"claims":[{"subject":string,"location":string|null,"timeStart":"9:05 PM"|null,"timeEnd":"9:20 PM"|null,"aboutPlayerIds":[string],"statement":string}],"evasive":boolean}`;
 
 export function buildExtractorRequest(
   view: DetectiveView,

@@ -4,7 +4,7 @@ import type { Case } from "../types";
 // The evidence alone does NOT name Elena: the master code (E1) fits four people and the shutdown log (E2) only
 // says the thief wanted Wren intact. Testimony decides it: Marcus's stairwell call is corroborated by Victor ->
 // Kenji was seen alone in the break room -> Priya says Elena sent her home and offered to lock up -> Sam saw a
-// heavy laptop bag at a silver hatchback at 21:25 -> the duck (E5) is Elena's joke (Priya and Tom know it).
+// heavy laptop bag at a silver hatchback at 9:25 PM -> the duck (E5) is Elena's joke (Priya and Tom know it).
 export const stolenPrototype: Case = {
   id: "stolen-prototype",
   title: "The Stolen Prototype",
@@ -12,28 +12,28 @@ export const stolenPrototype: Case = {
     "The night before its big launch, Helix Robotics discovered that Wren, its prototype robotic hand, had vanished from a locked lab. Only a handful of people were still in the building. Somebody walked out with the company's future.",
   setting: "Helix Robotics headquarters, the night before launch",
   victim: "Helix Robotics (the Wren prototype was stolen)",
-  timeline: { start: "20:00", end: "22:00" },
+  timeline: { start: "8:00 PM", end: "10:00 PM" },
   evidence: [
     {
       id: "E1",
       title: "Lab keypad log",
-      text: "The lab door was opened at 21:14 with a master code. The keypad log records that a master code was used, not whose. A handful of senior Helix people and the visiting contractor have one.",
+      text: "The lab door was opened at 9:14 PM with a master code. The keypad log records that a master code was used, not whose. A handful of senior Helix people and the visiting contractor have one.",
       kind: "key",
       explanation: "Elena used her own master code. Marcus was on the phone in the stairwell, Sam was on the phone with his daughter, and Kenji was debugging alone upstairs.",
     },
     {
       id: "E2",
       title: "Calibration rig log",
-      text: "Wren was switched off cleanly at 21:12 before it was removed. Yanking it out would have fried it, so the thief did not want it damaged.",
+      text: "Wren was switched off cleanly at 9:12 PM before it was removed. Yanking it out would have fried it, so the thief did not want it damaged.",
       kind: "key",
       explanation: "The thief wanted Wren intact. Elena designed it and refused to see it damaged. Many people could have read the runbook, so this only shows care, not who.",
     },
     {
       id: "E3",
       title: "Warm coffee cup",
-      text: "A coffee cup with the Helix logo on the lab bench, still slightly warm when security checked at 22:00.",
+      text: "A coffee cup with the Helix logo on the lab bench, still slightly warm when security checked at 10:00 PM.",
       kind: "ambiguous",
-      explanation: "Priya's cup. She left it at 20:50 when Elena sent her home. It was in a thermal mug sleeve, which kept it warm. Nadia and Priya both carry Helix cups, so it points at no one.",
+      explanation: "Priya's cup. She left it at 8:50 PM when Elena sent her home. It was in a thermal mug sleeve, which kept it warm. Nadia and Priya both carry Helix cups, so it points at no one.",
     },
     {
       id: "E4",
@@ -62,15 +62,15 @@ export const stolenPrototype: Case = {
       suspicious: "You have a master code, you know the shutdown sequence, and you drive a silver hatchback.",
       secret: null,
       knows: [
-        "Priya was working in the lab until about 20:45.",
+        "Priya was working in the lab until about 8:45 PM.",
         "Marcus kept disappearing to take phone calls tonight.",
       ],
       culprit: true,
       whatYouDid: [
-        "At 20:45 you told Priya to go home and said you'd lock up.",
-        "At 21:12 you ran Wren's shutdown sequence remotely, and at 21:14 you opened the lab with your master code.",
-        "You packed Wren into your laptop bag, left the duck in the empty case, and carried the bag to your car in the garage at about 21:25.",
-        "You were back at your desk by 21:35.",
+        "At 8:45 PM you told Priya to go home and said you'd lock up.",
+        "At 9:12 PM you ran Wren's shutdown sequence remotely, and at 9:14 PM you opened the lab with your master code.",
+        "You packed Wren into your laptop bag, left the duck in the empty case, and carried the bag to your car in the garage at about 9:25 PM.",
+        "You were back at your desk by 9:35 PM.",
       ],
       looseEnds: [
         "The keypad log shows a master code, and only you and Marcus have one.",
@@ -87,10 +87,10 @@ export const stolenPrototype: Case = {
       relationship: "Elena is your co-founder and increasingly your critic. Victor is your biggest investor.",
       reasonPresent: "Rehearsing tomorrow's launch speech.",
       motive: "Wren is insured for far more than the company could sell it for right now.",
-      suspicious: "You have a master code. From 21:05 to 21:20 you left your office and nobody at Helix knows where you went.",
-      secret: "From 21:05 to 21:20 you were in the stairwell on a call with a defense contractor, secretly negotiating to sell Wren's patents. If Elena or Victor found out, it would blow up the company.",
+      suspicious: "You have a master code. From 9:05 PM to 9:20 PM you left your office and nobody at Helix knows where you went.",
+      secret: "From 9:05 PM to 9:20 PM you were in the stairwell on a call with a defense contractor, secretly negotiating to sell Wren's patents. If Elena or Victor found out, it would blow up the company.",
       knows: [
-        "At about 21:05, on your way to the stairwell, you saw Elena walking toward the lab corridor.",
+        "At about 9:05 PM, on your way to the stairwell, you saw Elena walking toward the lab corridor.",
         "Victor has been cagey all day about where he was this morning.",
       ],
       culprit: false,
@@ -106,8 +106,8 @@ export const stolenPrototype: Case = {
       suspicious: "You were the last person seen in the lab. The warm coffee cup on the bench is yours.",
       secret: null,
       knows: [
-        "At about 20:45 Elena told you to go home and said she'd lock the lab herself. That was unusual. She never locks up.",
-        "You left the lab at 20:50 and caught the 21:05 bus. Your bus pass will show it.",
+        "At about 8:45 PM Elena told you to go home and said she'd lock the lab herself. That was unusual. She never locks up.",
+        "You left the lab at 8:50 PM and caught the 9:05 PM bus. Your bus pass will show it.",
         "Quacksworth the duck always sits on Elena's desk.",
       ],
       culprit: false,
@@ -123,8 +123,8 @@ export const stolenPrototype: Case = {
       suspicious: "The Orbital business card in the garage is yours.",
       secret: "This morning you secretly met Orbital Dynamics about investing in them too. If Marcus finds out, he'll say you betrayed Helix.",
       knows: [
-        "At about 21:15 you passed the stairwell and heard Marcus on the phone, talking about 'the patents'.",
-        "You parked in the garage at 19:30. Elena's silver hatchback was parked near the lift.",
+        "At about 9:15 PM you passed the stairwell and heard Marcus on the phone, talking about 'the patents'.",
+        "You parked in the garage at 7:30 PM. Elena's silver hatchback was parked near the lift.",
       ],
       culprit: false,
     },
@@ -136,11 +136,11 @@ export const stolenPrototype: Case = {
       relationship: "You know everyone by their car.",
       reasonPresent: "Your regular night shift.",
       motive: "Money's tight, and a prototype would fetch a fortune.",
-      suspicious: "You were supposed to do a round at 21:00, but you did it late because you were on the phone with your daughter.",
+      suspicious: "You were supposed to do a round at 9:00 PM, but you did it late because you were on the phone with your daughter.",
       secret: null,
       knows: [
-        "At about 21:25 on your late round you saw someone at a silver hatchback in the garage putting a heavy laptop bag in the boot. You didn't see their face.",
-        "At 22:00 you found the lab locked, with the duck sitting in the empty case.",
+        "At about 9:25 PM on your late round you saw someone at a silver hatchback in the garage putting a heavy laptop bag in the boot. You didn't see their face.",
+        "At 10:00 PM you found the lab locked, with the duck sitting in the empty case.",
       ],
       culprit: false,
     },
@@ -155,8 +155,8 @@ export const stolenPrototype: Case = {
       suspicious: "You were walking the corridors all evening with no fixed desk.",
       secret: "You've been quietly leaking launch details to a tech journalist in exchange for a flattering profile. If Marcus finds out, you're fired.",
       knows: [
-        "At about 21:10 you saw Marcus hurry into the stairwell holding his phone to his ear.",
-        "You texted a journalist from the break room at 21:20.",
+        "At about 9:10 PM you saw Marcus hurry into the stairwell holding his phone to his ear.",
+        "You texted a journalist from the break room at 9:20 PM.",
       ],
       culprit: false,
     },
@@ -168,11 +168,11 @@ export const stolenPrototype: Case = {
       relationship: "You chat with Sam the guard most nights. You barely know the engineers.",
       reasonPresent: "Your regular cleaning shift.",
       motive: "You're behind on rent, and everyone knows the prototype is valuable.",
-      suspicious: "Your cleaning cart was parked near the lab corridor around 21:00.",
+      suspicious: "Your cleaning cart was parked near the lab corridor around 9:00 PM.",
       secret: null,
       knows: [
-        "At about 21:30 you emptied the bin at Elena's desk. The desk was empty and the little duck that always sits there was gone.",
-        "You saw Priya leave through the front doors just before 21:00.",
+        "At about 9:30 PM you emptied the bin at Elena's desk. The desk was empty and the little duck that always sits there was gone.",
+        "You saw Priya leave through the front doors just before 9:00 PM.",
       ],
       culprit: false,
     },
@@ -187,18 +187,18 @@ export const stolenPrototype: Case = {
       suspicious: "You were in the building late with a laptop full of Wren's firmware.",
       secret: null,
       knows: [
-        "You were in the second-floor break room from 21:00 to 21:30 debugging, alone.",
-        "At about 21:15 you heard the lab door's keypad beep twice from down the corridor.",
+        "You were in the second-floor break room from 9:00 PM to 9:30 PM debugging, alone.",
+        "At about 9:15 PM you heard the lab door's keypad beep twice from down the corridor.",
       ],
       culprit: false,
     },
   ],
   truth:
-    "Elena Voss stole Wren to stop Marcus from selling it as a weapon. She sent Priya home at 20:45, powered Wren down with the proper sequence at 21:12, opened the lab with her master code at 21:14, and carried Wren out in her laptop bag to her silver hatchback at 21:25, leaving the team duck as a goodbye. Marcus's missing fifteen minutes were a secret call to sell the patents, which is why he was evasive. Victor was hiding a meeting with Orbital. Sam's late round only looked suspicious.",
+    "Elena Voss stole Wren to stop Marcus from selling it as a weapon. She sent Priya home at 8:45 PM, powered Wren down with the proper sequence at 9:12 PM, opened the lab with her master code at 9:14 PM, and carried Wren out in her laptop bag to her silver hatchback at 9:25 PM, leaving the team duck as a goodbye. Marcus's missing fifteen minutes were a secret call to sell the patents, which is why he was evasive. Victor was hiding a meeting with Orbital. Sam's late round only looked suspicious.",
   chain: [
-    { id: "master-code", description: "Master code at 21:14 fits Elena, Marcus, Sam or Kenji", keywords: ["master code", "keypad", "21:14"] },
+    { id: "master-code", description: "Master code at 9:14 PM fits Elena, Marcus, Sam or Kenji", keywords: ["master code", "keypad", "9:14 PM"] },
     { id: "sent-home", description: "Elena sent Priya home and offered to lock up", keywords: ["sent", "go home", "lock up", "lock the lab"] },
-    { id: "garage", description: "Heavy laptop bag at a silver hatchback at 21:25", keywords: ["hatchback", "laptop bag", "garage", "boot", "21:25"] },
+    { id: "garage", description: "Heavy laptop bag at a silver hatchback at 9:25 PM", keywords: ["hatchback", "laptop bag", "garage", "boot", "9:25 PM"] },
     { id: "duck", description: "The duck lives on Elena's desk", keywords: ["duck", "quacksworth"] },
   ],
 };

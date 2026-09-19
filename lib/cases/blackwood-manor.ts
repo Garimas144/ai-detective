@@ -3,16 +3,16 @@ import type { Case } from "../types";
 // Culprit: Dr. Alistair Finch (C1).
 // The evidence alone does NOT name Finch: the note (E1) threatens "the authorities" (Finch, Thorne and Jasper all
 // have something to fear) and the arsenic (E2) came from rat poison anyone on the estate could reach. Testimony decides it:
-// Margaret saw Finch enter the study 21:50-22:00 -> Mrs. Hodge gave him matches at 22:25 -> the Colonel says Finch
+// Margaret saw Finch enter the study 9:50 PM-10:00 PM -> Mrs. Hodge gave him matches at 10:25 PM -> the Colonel says Finch
 // left the card game twice -> Thorne was turned away at the study door by Finch.
 export const blackwoodManor: Case = {
   id: "blackwood-manor",
   title: "Murder at Blackwood Manor",
   description:
-    "Lord Edmund Blackwood was found dead in his locked study at 23:00, slumped over his desk beside a broken brandy glass. The storm had cut the manor off from the village. The killer is still in the house.",
+    "Lord Edmund Blackwood was found dead in his locked study at 11:00 PM, slumped over his desk beside a broken brandy glass. The storm had cut the manor off from the village. The killer is still in the house.",
   setting: "Blackwood Manor, a country house on a stormy night",
   victim: "Lord Edmund Blackwood",
-  timeline: { start: "21:00", end: "23:00" },
+  timeline: { start: "9:00 PM", end: "11:00 PM" },
   evidence: [
     {
       id: "E1",
@@ -26,21 +26,21 @@ export const blackwoodManor: Case = {
       title: "Broken brandy glass",
       text: "A broken brandy glass beside the desk. The spilled brandy contains arsenic, the kind sold as rat poison. Rat poison is kept in the garden shed, the kitchen pantry and the stables.",
       kind: "key",
-      explanation: "Finch pocketed a packet of rat poison from the garden shed that afternoon and dosed the brandy during his 'consultation' at 21:50. Anyone on the estate could have taken it, which is why it does not point at one person.",
+      explanation: "Finch pocketed a packet of rat poison from the garden shed that afternoon and dosed the brandy during his 'consultation' at 9:50 PM. Anyone on the estate could have taken it, which is why it does not point at one person.",
     },
     {
       id: "E3",
       title: "Stopped clock",
       text: "The study's mantel clock stopped at 10:23 PM.",
       kind: "ambiguous",
-      explanation: "It simply ran down. Mrs. Hodge forgot to wind it this week. Edmund actually died at around 22:10.",
+      explanation: "It simply ran down. Mrs. Hodge forgot to wind it this week. Edmund actually died at around 10:10 PM.",
     },
     {
       id: "E4",
       title: "Muddy footprint",
       text: "A large muddy footprint, a man's size 10, on the flagstones outside the study's French window. The window was found ajar.",
       kind: "red_herring",
-      explanation: "Jasper sneaked out through the study's French window at 21:30 to pay his bookie at the gate, and came back the same way at 22:30.",
+      explanation: "Jasper sneaked out through the study's French window at 9:30 PM to pay his bookie at the gate, and came back the same way at 10:30 PM.",
     },
     {
       id: "E5",
@@ -67,10 +67,10 @@ export const blackwoodManor: Case = {
       ],
       culprit: true,
       whatYouDid: [
-        "At 21:50 you went to the study for a 'private consultation' and slipped the rat poison you had taken from the garden shed that afternoon into Edmund's brandy.",
-        "You rejoined the Colonel's card game in the drawing room at 22:00.",
-        "At about 22:25 you asked Mrs. Hodge for matches, went back to the study, found Edmund dead, and burned his letter. The fire was dying and it only half burned.",
-        "You were back at the card table by 22:35.",
+        "At 9:50 PM you went to the study for a 'private consultation' and slipped the rat poison you had taken from the garden shed that afternoon into Edmund's brandy.",
+        "You rejoined the Colonel's card game in the drawing room at 10:00 PM.",
+        "At about 10:25 PM you asked Mrs. Hodge for matches, went back to the study, found Edmund dead, and burned his letter. The fire was dying and it only half burned.",
+        "You were back at the card table by 10:35 PM.",
       ],
       looseEnds: [
         "Margaret may have seen you enter the study.",
@@ -87,11 +87,11 @@ export const blackwoodManor: Case = {
       relationship: "Your husband's fortune passes mostly to you.",
       reasonPresent: "It's your home.",
       motive: "You inherit the estate, and your marriage was miserable.",
-      suspicious: "You and Edmund argued loudly at 21:30. The whole house heard.",
+      suspicious: "You and Edmund argued loudly at 9:30 PM. The whole house heard.",
       secret: "You were planning to leave Edmund. A packed suitcase is hidden in your car. If this comes out, it looks like you were fleeing.",
       knows: [
-        "At about 21:50 you saw Dr. Finch go into the study. He came out at about 22:00 looking pale.",
-        "After the argument you went up to your room and stayed there until 22:45.",
+        "At about 9:50 PM you saw Dr. Finch go into the study. He came out at about 10:00 PM looking pale.",
+        "After the argument you went up to your room and stayed there until 10:45 PM.",
       ],
       culprit: false,
     },
@@ -104,9 +104,9 @@ export const blackwoodManor: Case = {
       reasonPresent: "Staying the weekend, hoping to ask for money.",
       motive: "You inherit the title and some money, and you owe a bookie a fortune.",
       suspicious: "You wear size 10 shoes. The muddy footprint and open French window are yours.",
-      secret: "At 21:30 you sneaked out through the study's French window to pay your bookie at the gate, and came back the same way at 22:30. Your uncle was dead at his desk when you came through, and you ran without telling anyone.",
+      secret: "At 9:30 PM you sneaked out through the study's French window to pay your bookie at the gate, and came back the same way at 10:30 PM. Your uncle was dead at his desk when you came through, and you ran without telling anyone.",
       knows: [
-        "When you came back through the study at 22:30, the brandy glass was already broken and your uncle wasn't moving.",
+        "When you came back through the study at 10:30 PM, the brandy glass was already broken and your uncle wasn't moving.",
         "Through the window, as you approached, you saw someone crouched at the study fireplace. You couldn't see who.",
       ],
       culprit: false,
@@ -122,8 +122,8 @@ export const blackwoodManor: Case = {
       suspicious: "You served the brandy. Winding the study clock is your job.",
       secret: null,
       knows: [
-        "You served Lord Blackwood's brandy at 21:40, fresh from a sealed bottle.",
-        "At about 22:25 Dr. Finch came to the kitchen and asked for a box of matches. You thought it odd.",
+        "You served Lord Blackwood's brandy at 9:40 PM, fresh from a sealed bottle.",
+        "At about 10:25 PM Dr. Finch came to the kitchen and asked for a box of matches. You thought it odd.",
         "You forgot to wind the study clock this week. Duchess the hen keeps escaping.",
       ],
       culprit: false,
@@ -139,7 +139,7 @@ export const blackwoodManor: Case = {
       suspicious: "You were alone in the drawing room for stretches of the evening.",
       secret: null,
       knows: [
-        "You played cards with Dr. Finch in the drawing room from 21:00. He left twice: around 21:50 to 22:00, and around 22:25 to 22:35.",
+        "You played cards with Dr. Finch in the drawing room from 9:00 PM. He left twice: around 9:50 PM to 10:00 PM, and around 10:25 PM to 10:35 PM.",
         "The second time he came back he smelled of smoke.",
       ],
       culprit: false,
@@ -152,10 +152,10 @@ export const blackwoodManor: Case = {
       relationship: "You drew up Edmund's will. You distrust Jasper.",
       reasonPresent: "Edmund summoned you to discuss changes to his will.",
       motive: "Edmund discovered you'd been overcharging the estate.",
-      suspicious: "You were meant to meet Edmund at 22:00, but the meeting never happened.",
+      suspicious: "You were meant to meet Edmund at 10:00 PM, but the meeting never happened.",
       secret: "Edmund had found out you'd been overbilling the estate for years. He was going to take his business elsewhere.",
       knows: [
-        "At 22:00 you went to the study for your meeting, but Dr. Finch was just leaving and said Edmund was 'resting'. You went away.",
+        "At 10:00 PM you went to the study for your meeting, but Dr. Finch was just leaving and said Edmund was 'resting'. You went away.",
         "Edmund told you at dinner he intended to 'settle an ugly matter with an old friend'.",
       ],
       culprit: false,
@@ -171,8 +171,8 @@ export const blackwoodManor: Case = {
       suspicious: "You were seen hurrying along the study corridor.",
       secret: null,
       knows: [
-        "At about 22:20 you saw a light flickering in the study fireplace, though the fire had been let die earlier.",
-        "Duchess the hen got out of the kitchen yard again at about 21:30.",
+        "At about 10:20 PM you saw a light flickering in the study fireplace, though the fire had been let die earlier.",
+        "Duchess the hen got out of the kitchen yard again at about 9:30 PM.",
       ],
       culprit: false,
     },
@@ -188,17 +188,17 @@ export const blackwoodManor: Case = {
       secret: null,
       knows: [
         "Lady Margaret asked you on Friday to keep a suitcase in the car boot. You didn't ask why.",
-        "At about 21:35 you saw Jasper hurrying across the garden toward the gate.",
+        "At about 9:35 PM you saw Jasper hurrying across the garden toward the gate.",
       ],
       culprit: false,
     },
   ],
   truth:
-    "Dr. Alistair Finch poisoned Lord Blackwood with rat poison from the garden shed during a 21:50 'consultation', because Edmund was about to report his forged prescriptions. At 22:25 he borrowed matches from Mrs. Hodge and tried to burn Edmund's letter, but it only half burned. The stopped clock simply ran down, the muddy footprint and the open French window were Jasper sneaking out to pay his bookie, and the chicken was Mrs. Hodge's hen, who wandered in through that window.",
+    "Dr. Alistair Finch poisoned Lord Blackwood with rat poison from the garden shed during a 9:50 PM 'consultation', because Edmund was about to report his forged prescriptions. At 10:25 PM he borrowed matches from Mrs. Hodge and tried to burn Edmund's letter, but it only half burned. The stopped clock simply ran down, the muddy footprint and the open French window were Jasper sneaking out to pay his bookie, and the chicken was Mrs. Hodge's hen, who wandered in through that window.",
   chain: [
     { id: "letter", description: "Letter threatening to go to the authorities", keywords: ["authorities", "letter", "note", "burn"] },
     { id: "poison", description: "Rat poison taken from the garden shed", keywords: ["poison", "arsenic", "shed", "garden"] },
-    { id: "study", description: "Seen entering the study 21:50-22:00", keywords: ["21:50", "study", "pale", "consultation"] },
-    { id: "matches", description: "Borrowed matches at 22:25 and left the game twice", keywords: ["matches", "22:25", "smoke", "left twice", "card"] },
+    { id: "study", description: "Seen entering the study 9:50 PM-10:00 PM", keywords: ["9:50 PM", "study", "pale", "consultation"] },
+    { id: "matches", description: "Borrowed matches at 10:25 PM and left the game twice", keywords: ["matches", "10:25 PM", "smoke", "left twice", "card"] },
   ],
 };

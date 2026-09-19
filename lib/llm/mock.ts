@@ -1,11 +1,12 @@
 // Offline stand-in for Nebius. Crude heuristics, good enough to exercise the full game loop,
 // the UI and the tests without an API key. Never used for real results.
 
+import { to12h, toMinutes } from "../time";
 import type { LLMCallRecord, LLMClient, LLMRequest } from "./types";
 
 type AnyRec = Record<string, any>;
 
-const TIME_RE = /\b([01]?\d|2[0-3])[:.]([0-5]\d)\b/g;
+const TIME_RE = /\b(0?\d|1\d|2[0-3])[:.]([0-5]\d)(?:\s?([AaPp])\.?[Mm]\.?)?/g;
 const PLACE_RE = /\b(?:in|at|to|from|near|by|inside|outside) the ([a-z][a-z' -]{2,28}?)(?=[,.;!?]| from| until| till| at| with| and| when| around| about|$)/i;
 const NEGATION_RE = /\b(never|didn't|did not|wasn't|was not|not|no one|nobody)\b/i;
 const EVASIVE_RE = /\b(don't remember|can't recall|cannot recall|no comment|why does it matter|none of your business|i'd rather not)\b/i;
@@ -21,11 +22,6 @@ function words(text: string): Set<string> {
   );
 }
 
-function toMinutes(t: string | null): number | null {
-  if (!t) return null;
-  const [h, m] = t.split(":").map(Number);
-  return h * 60 + m;
-}
 
 function extract(d: AnyRec) {
   const sentences = String(d.answer)
@@ -34,7 +30,7 @@ function extract(d: AnyRec) {
     .filter((s) => s.length > 8);
   const others: AnyRec[] = (d.players ?? []).filter((p: AnyRec) => p.id !== d.speakerId);
   const claims = sentences.slice(0, 6).map((s) => {
-    const times = [...s.matchAll(TIME_RE)].map((m) => `${m[1].padStart(2, "0")}:${m[2]}`);
+    const times = [...s.matchAll(TIME_RE)].map((m) => { let h = Number(m[1]); if (m[3]?.toLowerCase() === "p" && h < 12) h += 12; if (m[3]?.toLowerCase() === "a" && h === 12) h = 0; return to12h(h, Number(m[2])); });
     const place = s.match(PLACE_RE)?.[1]?.trim() ?? null;
     const about = others
       .filter((p) => String(p.character).split(/\s+/).some((w: string) => w.length > 3 && s.toLowerCase().includes(w.toLowerCase())))

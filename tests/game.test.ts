@@ -128,3 +128,35 @@ describe("testimony framing", () => {
     expect(asTestimony("Jasper claims he never left.", "Jasper")).toBe("Jasper claims he never left.");
   });
 });
+
+describe("12-hour clock everywhere", () => {
+  it("no case text uses 24-hour times, and every time reads like 9:14 PM or 12:30 AM", async () => {
+    const { CASES } = await import("@/lib/cases");
+    for (const c of CASES) {
+      const blob = JSON.stringify(c);
+      expect(blob, c.id).not.toMatch(/\b(?:[01]\d|2[0-3]):[0-5]\d\b(?!\s?[AP]M)/);
+      expect(blob, c.id).toMatch(/\b\d{1,2}:\d{2} (?:AM|PM)\b/);
+      expect(c.timeline.start).toMatch(/^\d{1,2}:\d{2} (AM|PM)$/);
+    }
+  });
+
+  it("converts 24-hour times written by a model, leaves 12-hour times alone, and parses both", async () => {
+    const { normalizeTimes, to12h, toMinutes } = await import("@/lib/time");
+    expect(to12h(21, 14)).toBe("9:14 PM");
+    expect(to12h(0, 30)).toBe("12:30 AM");
+    expect(to12h(12, 5)).toBe("12:05 PM");
+    expect(normalizeTimes("Finch left at 21:50 and returned at 00:35, not 9:05 PM or 10:00.")).toBe("Finch left at 9:50 PM and returned at 12:35 AM, not 9:05 PM or 10:00.");
+    expect(normalizeTimes("at 01:05 and 13:00")).toBe("at 1:05 AM and 1:00 PM");
+    expect(toMinutes("9:14 PM")).toBe(21 * 60 + 14);
+    expect(toMinutes("21:14")).toBe(21 * 60 + 14);
+    expect(toMinutes("12:30 AM")).toBe(30);
+  });
+
+  it("model output is normalized before it is stored, but the player's own words are kept exactly", async () => {
+    const { state } = await playGame({ caseId: "blackwood-manor", players: 3, answer: () => "I left the study at 22:05 exactly." });
+    const answer = state.turns.filter((t) => t.kind === "answer")[0];
+    expect(answer.answer).toBe("I left the study at 22:05 exactly."); // testimony untouched
+    expect(state.claims.some((c) => /10:05 PM/.test(c.statement))).toBe(true); // shown to people in 12-hour form
+    expect(state.claims.some((c) => /22:05/.test(c.statement))).toBe(false);
+  });
+});

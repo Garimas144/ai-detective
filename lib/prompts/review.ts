@@ -7,6 +7,7 @@ import {
   renderInferences,
   renderTestimony,
   TESTIMONY_RULE,
+  TIME_RULE,
   type DetectiveView,
 } from "../game/detectiveView";
 import type { SuspicionProfile } from "../types";
@@ -67,16 +68,17 @@ Remember that innocent people also lie, usually to hide a personal secret. A lie
 
 PART 2: PLAN. Choose the questions for the next round.
 QUESTION STYLE, most important rule: every question must be SPECIFIC and CONCRETE, one short factual question that names a real detail.
-- Name an exact time, place, person, object or evidence item, and ask for one fact: "Who was with you at 21:10?", "Which door did you use to leave the library?", "What time did you last see Dana, and where?"
-- Round 1: quote one concrete detail from THAT person's own written alibi and ask them to pin it down ("Your alibi says you were at the bar from 20:45. Who ordered a drink from you there?").
-- Later rounds: put one specific conflict to the person, quoting the exact words or time ("Dana says she saw you by the loading dock at 21:12. Were you there, yes or no?").
+- Name an exact time, place, person, object or evidence item, and ask for one fact: "Who was with you at 9:10 PM?", "Which door did you use to leave the library?", "What time did you last see Dana, and where?"
+- Round 1: quote one concrete detail from THAT person's own written alibi and ask them to pin it down ("Your alibi says you were at the bar from 8:45 PM. Who ordered a drink from you there?").
+- Later rounds: put one specific conflict to the person, quoting the exact words or time ("Dana says she saw you by the loading dock at 9:12 PM. Were you there, yes or no?").
 - Do NOT ask abstract, open-ended or creative questions: no "walk me through your evening", "tell me about...", "what seemed out of place", "how would you describe...", no hypotheticals, no metaphors, no asking for opinions or feelings.
 - One fact per question, one or two spoken sentences, no stage directions.
-- Pursue contradictions, story changes, unexplained evidence and open questions. You may quote other people's testimony, but always as testimony ("Dana says you called her at 19:55").
+- Pursue contradictions, story changes, unexplained evidence and open questions. You may quote other people's testimony, but always as testimony ("Dana says you called her at 7:55 PM").
 - Allocate freely: you may ask one person several questions and skip others.
 - If you are confident enough to accuse now and early ending is allowed, set endInvestigation true and give no questions.
 
 ${TESTIMONY_RULE}
+${TIME_RULE}
 
 Use claim ids and player ids exactly as given. Your "reasoning" is private notes (3-6 sentences) on where the case stands.
 

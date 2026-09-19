@@ -3,8 +3,8 @@ import type { Case } from "../types";
 // Culprit: Chloe Tran (C1).
 // The evidence alone does NOT name Chloe: Nate's last message went to the whole group chat (E1), so anyone who
 // cared about "the money" could have gone, and size 7 prints (E2) fit several people. Testimony decides it:
-// Maya found Chloe's bed empty at 00:10 -> Jess saw a short hooded figure walking back from the dock at 00:20 ->
-// Dev heard the back door and wet footsteps at 00:20 -> Sofia saw Chloe on the back deck at 00:05.
+// Maya found Chloe's bed empty at 12:10 AM -> Jess saw a short hooded figure walking back from the dock at 12:20 AM ->
+// Dev heard the back door and wet footsteps at 12:20 AM -> Sofia saw Chloe on the back deck at 12:05 AM.
 export const lakesideCabin: Case = {
   id: "lakeside-cabin",
   title: "The Lakeside Cabin Murder",
@@ -12,12 +12,12 @@ export const lakesideCabin: Case = {
     "A group of old friends met at a remote lakeside cabin for a reunion weekend. At dawn, Nate Mercer was found in the shallows beside the dock with a head wound. Nobody admits to leaving the cabin after midnight.",
   setting: "A rented cabin on Loon Lake, reunion weekend",
   victim: "Nate Mercer, tech founder",
-  timeline: { start: "23:00", end: "01:00" },
+  timeline: { start: "11:00 PM", end: "1:00 AM" },
   evidence: [
     {
       id: "E1",
       title: "Nate's last message",
-      text: "Nate's phone, found in the cabin, shows his last message at 00:08, sent to the group chat 'Loon Lake weekend': 'Dock. Now. Whoever this concerns, we need to talk about the money.'",
+      text: "Nate's phone, found in the cabin, shows his last message at 12:08 AM, sent to the group chat 'Loon Lake weekend': 'Dock. Now. Whoever this concerns, we need to talk about the money.'",
       kind: "key",
       explanation: "Nate had found out Chloe was embezzling from their company and summoned her to the dock. He sent it to the whole group so nobody would suspect her. Chloe knew it meant her.",
     },
@@ -33,14 +33,14 @@ export const lakesideCabin: Case = {
       title: "Unlocked back door",
       text: "The cabin's back door was found unlocked in the morning. Everyone swears they locked it.",
       kind: "ambiguous",
-      explanation: "Owen went out for a smoke at 23:45 and forgot to lock it. Chloe used it at 00:20 to get back in.",
+      explanation: "Owen went out for a smoke at 11:45 PM and forgot to lock it. Chloe used it at 12:20 AM to get back in.",
     },
     {
       id: "E4",
       title: "Whisky on the porch",
       text: "An empty whisky bottle and two glasses on the front porch.",
       kind: "red_herring",
-      explanation: "Owen and Nate drank together at 23:30 and argued about Maya. It ended with a hug, not a murder.",
+      explanation: "Owen and Nate drank together at 11:30 PM and argued about Maya. It ended with a hug, not a murder.",
     },
     {
       id: "E5",
@@ -67,9 +67,9 @@ export const lakesideCabin: Case = {
       ],
       culprit: true,
       whatYouDid: [
-        "At 00:08 Nate texted the whole group chat to come to the dock about \"the money\". You knew it meant you, and slipped out of your shared room while Maya slept.",
+        "At 12:08 AM Nate texted the whole group chat to come to the dock about \"the money\". You knew it meant you, and slipped out of your shared room while Maya slept.",
         "On the dock he said he'd go to the police. You argued, you shoved him, he hit his head on a post and fell into the shallows.",
-        "You panicked, walked back soaked to the ankles, and came in through the unlocked back door at about 00:20.",
+        "You panicked, walked back soaked to the ankles, and came in through the unlocked back door at about 12:20 AM.",
         "You deleted his message on your own phone, but not on his.",
       ],
       looseEnds: [
@@ -86,11 +86,11 @@ export const lakesideCabin: Case = {
       relationship: "Nate's oldest friend. Maya is your ex-girlfriend, and she's now dating Nate.",
       reasonPresent: "The reunion.",
       motive: "Nate is dating your ex, and you haven't forgiven him.",
-      suspicious: "You drank whisky with Nate on the porch and argued with him. You went outside again at 23:45.",
-      secret: "You and Nate had a real shouting match at 23:30 about Maya. If people know, you'll look like the obvious killer, so you'd rather say you just 'had a drink'.",
+      suspicious: "You drank whisky with Nate on the porch and argued with him. You went outside again at 11:45 PM.",
+      secret: "You and Nate had a real shouting match at 11:30 PM about Maya. If people know, you'll look like the obvious killer, so you'd rather say you just 'had a drink'.",
       knows: [
-        "At about 23:50, smoking out back, you saw Nate walk toward the dock with his phone lit up.",
-        "You forgot to lock the back door when you came in at 23:55.",
+        "At about 11:50 PM, smoking out back, you saw Nate walk toward the dock with his phone lit up.",
+        "You forgot to lock the back door when you came in at 11:55 PM.",
       ],
       culprit: false,
     },
@@ -106,7 +106,7 @@ export const lakesideCabin: Case = {
       secret: null,
       knows: [
         "Around midnight you set up the hot dog prank on Nate's car roof.",
-        "At about 00:20, heading back in, you saw a short figure with a hood up walking back from the dock in the dark.",
+        "At about 12:20 AM, heading back in, you saw a short figure with a hood up walking back from the dock in the dark.",
       ],
       culprit: false,
     },
@@ -121,8 +121,8 @@ export const lakesideCabin: Case = {
       suspicious: "You were Nate's girlfriend and you went to bed early.",
       secret: "You were planning to break up with Nate this weekend. You told nobody, and now it looks terrible.",
       knows: [
-        "You went to bed at 23:15 with earplugs in.",
-        "You got up for water at about 00:10. Chloe's bed was empty. When you woke again at 00:30, she was back in it.",
+        "You went to bed at 11:15 PM with earplugs in.",
+        "You got up for water at about 12:10 AM. Chloe's bed was empty. When you woke again at 12:30 AM, she was back in it.",
       ],
       culprit: false,
     },
@@ -137,7 +137,7 @@ export const lakesideCabin: Case = {
       suspicious: "You know the cabin and the dock better than anyone.",
       secret: null,
       knows: [
-        "Your room is by the back door. At about 00:20 you heard it creak and heard wet footsteps in the hall. You assumed it was Owen.",
+        "Your room is by the back door. At about 12:20 AM you heard it creak and heard wet footsteps in the hall. You assumed it was Owen.",
         "Nate told you on Friday that 'the company numbers don't add up'.",
       ],
       culprit: false,
@@ -153,7 +153,7 @@ export const lakesideCabin: Case = {
       suspicious: "You quit the company suddenly and never said why.",
       secret: "You quit because you noticed strange transfers in the company accounts and were too scared to report them.",
       knows: [
-        "You saw Chloe step outside onto the back deck at about 00:05, checking her phone.",
+        "You saw Chloe step outside onto the back deck at about 12:05 AM, checking her phone.",
         "Nate told you at dinner, 'I finally know where the money's been going.'",
       ],
       culprit: false,
@@ -166,10 +166,10 @@ export const lakesideCabin: Case = {
       relationship: "Jess is your girlfriend. You only met Nate this weekend.",
       reasonPresent: "Jess brought you along.",
       motive: "Nate was rude to Jess all evening.",
-      suspicious: "You're the outsider, and you went for a walk alone by the lake at 23:40.",
+      suspicious: "You're the outsider, and you went for a walk alone by the lake at 11:40 PM.",
       secret: null,
       knows: [
-        "At 23:40 you walked along the lake shore and saw Nate and Owen hugging on the porch.",
+        "At 11:40 PM you walked along the lake shore and saw Nate and Owen hugging on the porch.",
         "You helped Jess carry the hot dog cooler out at midnight.",
       ],
       culprit: false,
@@ -180,23 +180,23 @@ export const lakesideCabin: Case = {
       blurb: "a neighbour from the next cabin along the lake",
       background: "You've lived by the lake for years and hate noise.",
       relationship: "You know Dev's family. You'd never met the others.",
-      reasonPresent: "You came over to complain about the music at 23:30 and stayed for a drink.",
+      reasonPresent: "You came over to complain about the music at 11:30 PM and stayed for a drink.",
       motive: "The group kept you awake all night.",
       suspicious: "You're a stranger to the group, and you walked home along the shore path by the dock.",
       secret: null,
       knows: [
-        "Walking home along the shore at about 00:15, you heard two voices arguing on the dock, a man and a woman.",
+        "Walking home along the shore at about 12:15 AM, you heard two voices arguing on the dock, a man and a woman.",
         "You heard a splash, but assumed someone had jumped in for a swim.",
       ],
       culprit: false,
     },
   ],
   truth:
-    "Chloe Tran had been embezzling from the company. Nate texted the whole group about 'the money' at 00:08, and when he threatened to go to the police she shoved him. He hit his head and fell into the shallows. She walked back soaked and slipped in through the back door Owen had left unlocked. The whisky was Owen and Nate's argument about Maya, and the forty bunless hot dogs were Jess's prank.",
+    "Chloe Tran had been embezzling from the company. Nate texted the whole group about 'the money' at 12:08 AM, and when he threatened to go to the police she shoved him. He hit his head and fell into the shallows. She walked back soaked and slipped in through the back door Owen had left unlocked. The whisky was Owen and Nate's argument about Maya, and the forty bunless hot dogs were Jess's prank.",
   chain: [
-    { id: "message", description: "Nate's 00:08 group message about the money", keywords: ["00:08", "message", "text", "dock", "money"] },
+    { id: "message", description: "Nate's 12:08 AM group message about the money", keywords: ["12:08 AM", "message", "text", "dock", "money"] },
     { id: "prints", description: "Size 7 wet prints to the back door", keywords: ["size 7", "sneaker", "prints", "wet"] },
-    { id: "empty-bed", description: "Chloe's bed was empty at 00:10", keywords: ["bed", "empty", "00:10", "asleep"] },
-    { id: "back-door", description: "Hooded figure from the dock and the back door at 00:20", keywords: ["00:20", "hood", "back door", "footsteps"] },
+    { id: "empty-bed", description: "Chloe's bed was empty at 12:10 AM", keywords: ["bed", "empty", "12:10 AM", "asleep"] },
+    { id: "back-door", description: "Hooded figure from the dock and the back door at 12:20 AM", keywords: ["12:20 AM", "hood", "back door", "footsteps"] },
   ],
 };

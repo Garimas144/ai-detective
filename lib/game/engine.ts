@@ -9,7 +9,8 @@ import type { CallSink, LLMClient } from "../llm/types";
 import { accusationSchema, buildAccusationRequest } from "../prompts/accusation";
 import { buildExtractorRequest, extractorSchema } from "../prompts/extractor";
 import { buildReviewRequest, reviewSchema, type ReviewOutput } from "../prompts/review";
-import { buildRevealRequest, revealSchema } from "../prompts/reveal";
+import { buildRevealFacts, buildRevealRequest, revealSchema } from "../prompts/reveal";
+import { verifyReveal } from "./revealCheck";
 import { buildProfiles, topSuspect } from "../scoring";
 import type {
   Claim,
@@ -516,12 +517,8 @@ export async function revealTruth(state: GameState, deps: EngineDeps, secrets: S
   const c = getCase(state.caseId!);
   try {
     const out = await callJson(deps.llm, buildRevealRequest(state, c, secrets, state.accusation!), revealSchema, deps.onCall);
-    const valid = new Set(state.players.map((p) => p.id));
-    state.revealAnalysis = {
-      summary: out.summary,
-      importantLies: out.importantLies.filter((x) => valid.has(x.playerId)),
-      misleadingTestimony: out.misleadingTestimony.filter((x) => valid.has(x.playerId)),
-    };
+    // Never show a guess as a fact: keep only lies that quote real testimony and cite case-file facts.
+    state.revealAnalysis = verifyReveal(out, state, buildRevealFacts(state, c, secrets));
   } catch (err) {
     state.error = err instanceof Error ? err.message : String(err);
     state.revealAnalysis = { summary: c.truth, importantLies: [], misleadingTestimony: [] };

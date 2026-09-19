@@ -202,7 +202,7 @@ function AlibiEntry({ view, me, game }: { view: PublicView; me: PlayerPrivate; g
       <div className="stack">
         <h2 style={{ marginBottom: 0 }}>Write your alibi</h2>
         <p className="small muted" style={{ margin: 0 }}>Where were you, when, and with whom? Once you submit it's locked, and the detective will compare everything you say against it.</p>
-        <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="From 21:00 I was in the drawing room playing cards with…" />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="From 9:00 PM I was in the drawing room playing cards with…" />
         {me.card && <RoleDrawer card={me.card} alibi={null} />}
         <Evidence view={view} />
       </div>

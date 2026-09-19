@@ -202,7 +202,8 @@ export interface PlayerAssessment {
 
 export interface RevealAnalysis {
   summary: string;
-  importantLies: { playerId: string; statement: string; truth: string }[];
+  /** Only lies that quote real testimony and cite case-file facts; `sources` are those facts verbatim. */
+  importantLies: { playerId: string; statement: string; truth: string; sources: string[] }[];
   misleadingTestimony: { playerId: string; statement: string; effect: string }[];
 }
 

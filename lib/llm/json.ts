@@ -1,4 +1,5 @@
 import type { z } from "zod";
+import { normalizeTimes } from "../time";
 import type { CallSink, LLMCallRecord, LLMClient, LLMRequest } from "./types";
 
 export function extractJson(text: string): unknown {
@@ -49,7 +50,7 @@ export async function callJson<S extends z.ZodTypeAny>(
     logCall(result.record);
     sink?.(result.record);
     try {
-      return schema.parse(extractJson(result.text));
+      return schema.parse(extractJson(normalizeTimes(result.text)));
     } catch (err) {
       lastError = err instanceof Error ? err.message.slice(0, 400) : String(err);
     }

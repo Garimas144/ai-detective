@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { MODELS } from "../config";
 import type { LLMRequest } from "../llm/types";
-import { renderCase, renderInferences, renderTestimony, TESTIMONY_RULE, type DetectiveView } from "../game/detectiveView";
+import { renderCase, renderInferences, renderTestimony, TESTIMONY_RULE, TIME_RULE, type DetectiveView } from "../game/detectiveView";
 import type { SuspicionProfile } from "../types";
 
 export const accusationSchema = z.object({
@@ -18,6 +18,7 @@ export type AccusationOutput = z.infer<typeof accusationSchema>;
 const SYSTEM = `You are the Detective. The questioning is over. You must now accuse EXACTLY ONE of the people being questioned as the culprit.
 
 ${TESTIMONY_RULE}
+${TIME_RULE}
 
 How to decide:
 - Reason only from the public evidence and the testimony you heard or read.
@@ -30,7 +31,7 @@ Then announce it out loud:
 - "reasoning": a spoken accusation of 4 to 7 sentences, addressed to the room. Name the accused, walk through the key contradictions and evidence, and say clearly which parts are evidence and which are testimony. No stage directions or markdown.
 - "keyPoints": 2 to 5 short bullet phrases of the decisive points.
 - "assessments": one entry for EVERY person being questioned (accused or not), so the room can see how you judged each of them:
-  - "suspicious": what specifically made this person suspicious. Each item names the actual statement or evidence and why it is a problem (for example "Said she was in the library at 21:10, but Dana says she saw her at the loading dock at 21:12"). Include story changes and dodged questions. Write "Nothing solid" if there is nothing.
+  - "suspicious": what specifically made this person suspicious. Each item names the actual statement or evidence and why it is a problem (for example "Said she was in the library at 9:10 PM, but Dana says she saw her at the loading dock at 9:12 PM"). Include story changes and dodged questions. Write "Nothing solid" if there is nothing.
   - "checkedOut": what specifically held up for this person: statements corroborated by another person or by the evidence, and alibi details that stayed consistent. Write "Nothing confirmed" if nothing did.
   Be concrete and keep each item to one sentence. Never claim something checked out unless it is in the testimony or findings above.
 

@@ -60,12 +60,13 @@ export function Reveal({ view, reveal }: { view: PublicView; reveal: RevealData 
       <div className="split">
         <div className="panel">
           <h2>Major lies</h2>
-          {!reveal.analysis?.importantLies.length && <div className="small muted">None identified.</div>}
+          {!reveal.analysis?.importantLies.length && <div className="small muted">No statement directly contradicted the case files.</div>}
           {reveal.analysis?.importantLies.map((l, i) => (
             <div key={i} className="contradiction" style={{ marginBottom: 8 }}>
               <div className="meta">{who(l.playerId)}</div>
               <div className="quote small">“{l.statement}”</div>
               <div className="small">Truth: {l.truth}</div>
+              {l.sources.map((src, k) => <div key={k} className="small muted" style={{ marginTop: 2 }}>Case file: {src}</div>)}
             </div>
           ))}
         </div>

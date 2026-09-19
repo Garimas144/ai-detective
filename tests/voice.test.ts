@@ -93,7 +93,7 @@ describe("agent voice: spoken words become testimony", () => {
     expect(turn.answer).toBe(text); // fillers and hesitations preserved
     expect(turn.voice).toMatchObject({ mode: "agent", transcriptSource: "client-reported", conversationId, segments: ["Um, I was, like, near the", "east wing at 20:10."] });
     expect(turn.voice!.answerMs).toBeGreaterThanOrEqual(0);
-    expect(room.state.claims.some((c) => c.statement.includes("east wing at 20:10") && /says/.test(c.statement))).toBe(true);
+    expect(room.state.claims.some((c) => c.statement.includes("east wing at 8:10 PM") && /says/.test(c.statement))).toBe(true);
     // Nebius (the extractor call) received the words, framed as testimony.
     const extractor = requests.filter((r) => r.purpose === "extractor").at(-1)!;
     expect(extractor.user).toContain("Um, I was, like, near the east wing at 20:10.");

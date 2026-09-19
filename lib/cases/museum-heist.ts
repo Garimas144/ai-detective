@@ -3,8 +3,8 @@ import type { Case } from "../types";
 // Culprit: Rafael Moreno (C2).
 // The evidence alone does NOT name Rafael: the alarm card (E1) could belong to curatorial, restoration, security
 // or IT, and the wax (E2) is used by curatorial staff too. Testimony decides it: Dana approved maintenance mode
-// at Rafael's request -> Theo saw Rafael hurrying from the Egyptian wing wiping his hands at 20:20 ->
-// Marguerite smelled wax by the wing at 20:00 and saw Rafael sitting very still at 20:25.
+// at Rafael's request -> Theo saw Rafael hurrying from the Egyptian wing wiping his hands at 8:20 PM ->
+// Marguerite smelled wax by the wing at 8:00 PM and saw Rafael sitting very still at 8:25 PM.
 export const museumHeist: Case = {
   id: "museum-heist",
   title: "The Museum Heist",
@@ -12,12 +12,12 @@ export const museumHeist: Case = {
     "During a private donor preview at the Aldermoor Museum, the Golden Scarab brooch disappeared from its locked case in the Egyptian wing. The alarm never sounded. Everyone in the building had a reason to be near it.",
   setting: "The Aldermoor Museum's after-hours donor preview",
   victim: "The Aldermoor Museum (the Golden Scarab brooch was stolen)",
-  timeline: { start: "19:30", end: "21:00" },
+  timeline: { start: "7:30 PM", end: "9:00 PM" },
   evidence: [
     {
       id: "E1",
       title: "Alarm log",
-      text: "The Scarab case alarm was switched to 'maintenance mode' from 20:05 to 20:25 with a collections-wing staff card. The log records the card type, not whose it was. Cards like this are issued to curatorial, restoration, security and IT staff.",
+      text: "The Scarab case alarm was switched to 'maintenance mode' from 8:05 PM to 8:25 PM with a collections-wing staff card. The log records the card type, not whose it was. Cards like this are issued to curatorial, restoration, security and IT staff.",
       kind: "key",
       explanation: "Rafael used his own restoration card after asking Dana to approve maintenance mode for a 'scheduled wax treatment'. Beatrice, Dana and Oscar hold the same card type.",
     },
@@ -33,7 +33,7 @@ export const museumHeist: Case = {
       title: "Torn black glove",
       text: "A scrap of torn black fabric from a serving glove, caught on the Egyptian wing's staff door.",
       kind: "ambiguous",
-      explanation: "Theo tore his glove sneaking through the staff door at 20:30 to photograph the empty case for his article.",
+      explanation: "Theo tore his glove sneaking through the staff door at 8:30 PM to photograph the empty case for his article.",
     },
     {
       id: "E4",
@@ -47,7 +47,7 @@ export const museumHeist: Case = {
       title: "The pigeon",
       text: "A live pigeon was found perched on a sarcophagus in the Egyptian wing, looking extremely pleased with itself.",
       kind: "odd",
-      explanation: "Theo propped the roof fire door open for a cigarette at 19:45 and a pigeon wandered in. Nothing to do with the theft.",
+      explanation: "Theo propped the roof fire door open for a cigarette at 7:45 PM and a pigeon wandered in. Nothing to do with the theft.",
     },
   ],
   characters: [
@@ -62,7 +62,7 @@ export const museumHeist: Case = {
       suspicious: "You have keys to every case in the wing.",
       secret: "Last week you cracked the Scarab case's glass while cleaning and covered the crack with a label instead of reporting it. You're terrified the investigation will find it.",
       knows: [
-        "At about 19:50 you saw Lady Imogen standing alone at the Scarab case for several minutes.",
+        "At about 7:50 PM you saw Lady Imogen standing alone at the Scarab case for several minutes.",
         "Rafael told you this afternoon he'd be 'working late in the workshop'.",
       ],
       culprit: false,
@@ -83,10 +83,10 @@ export const museumHeist: Case = {
       ],
       culprit: true,
       whatYouDid: [
-        "At 19:55 you asked Dana to approve maintenance mode on the Scarab case for a 'scheduled wax treatment'. She said yes over the phone.",
-        "At 20:05 you switched the alarm to maintenance mode with your restoration card.",
-        "At about 20:15 you opened the latch, with wax still on your fingers, and pocketed the Scarab.",
-        "You hid it inside a hollow plaster cast in the workshop and were back at your bench by 20:25.",
+        "At 7:55 PM you asked Dana to approve maintenance mode on the Scarab case for a 'scheduled wax treatment'. She said yes over the phone.",
+        "At 8:05 PM you switched the alarm to maintenance mode with your restoration card.",
+        "At about 8:15 PM you opened the latch, with wax still on your fingers, and pocketed the Scarab.",
+        "You hid it inside a hollow plaster cast in the workshop and were back at your bench by 8:25 PM.",
       ],
       looseEnds: [
         "Dana knows you requested maintenance mode.",
@@ -105,8 +105,8 @@ export const museumHeist: Case = {
       suspicious: "You lingered alone at the Scarab case. The pawn receipt in the cloakroom is yours.",
       secret: "You're broke. Yesterday you pawned your pearls to pay for tonight's dress. If anyone finds out, you're finished in society.",
       knows: [
-        "At about 20:30 you saw a waiter, Theo, slip through the staff door into the Egyptian wing.",
-        "You admired the Scarab at 19:50 because your grandmother once owned one like it.",
+        "At about 8:30 PM you saw a waiter, Theo, slip through the staff door into the Egyptian wing.",
+        "You admired the Scarab at 7:50 PM because your grandmother once owned one like it.",
       ],
       culprit: false,
     },
@@ -121,8 +121,8 @@ export const museumHeist: Case = {
       suspicious: "You kept leaving your post to take photos. The torn glove on the staff door is yours, and you propped the roof door open. You'd happily tell the detective you're a journalist if it came to it.",
       secret: null,
       knows: [
-        "At about 20:20 you saw Rafael walking fast from the Egyptian wing toward the workshop, wiping his hands on a cloth.",
-        "At 19:45 you propped the roof fire door open for a cigarette.",
+        "At about 8:20 PM you saw Rafael walking fast from the Egyptian wing toward the workshop, wiping his hands on a cloth.",
+        "At 7:45 PM you propped the roof fire door open for a cigarette.",
       ],
       culprit: false,
     },
@@ -137,8 +137,8 @@ export const museumHeist: Case = {
       suspicious: "You approved switching off the alarm.",
       secret: null,
       knows: [
-        "At 19:55 Rafael phoned asking you to approve maintenance mode on the Scarab case for a 'scheduled wax treatment'. You approved it without checking the schedule, which is embarrassing.",
-        "At 21:00 you found the case closed and the Scarab gone.",
+        "At 7:55 PM Rafael phoned asking you to approve maintenance mode on the Scarab case for a 'scheduled wax treatment'. You approved it without checking the schedule, which is embarrassing.",
+        "At 9:00 PM you found the case closed and the Scarab gone.",
       ],
       culprit: false,
     },
@@ -151,10 +151,10 @@ export const museumHeist: Case = {
       reasonPresent: "Photographing the donors for a magazine.",
       motive: "A photo of the empty case would sell for a fortune.",
       suspicious: "You wandered the galleries with a camera all evening.",
-      secret: "You slipped into the closed Egyptian wing at 19:40 to shoot the Scarab without permission. If it comes out, you'll be banned from every museum in the city.",
+      secret: "You slipped into the closed Egyptian wing at 7:40 PM to shoot the Scarab without permission. If it comes out, you'll be banned from every museum in the city.",
       knows: [
-        "Your camera timestamps show the Scarab still in its case at 19:40.",
-        "At about 20:10 you saw Dana on her phone near the security desk, looking distracted.",
+        "Your camera timestamps show the Scarab still in its case at 7:40 PM.",
+        "At about 8:10 PM you saw Dana on her phone near the security desk, looking distracted.",
       ],
       culprit: false,
     },
@@ -169,8 +169,8 @@ export const museumHeist: Case = {
       suspicious: "You've publicly campaigned for the Scarab's repatriation.",
       secret: null,
       knows: [
-        "At about 20:00 you smelled restoration wax in the corridor outside the Egyptian wing.",
-        "Rafael's workshop door was ajar at 20:25, and he was sitting very still at his bench.",
+        "At about 8:00 PM you smelled restoration wax in the corridor outside the Egyptian wing.",
+        "Rafael's workshop door was ajar at 8:25 PM, and he was sitting very still at his bench.",
       ],
       culprit: false,
     },
@@ -186,17 +186,17 @@ export const museumHeist: Case = {
       secret: null,
       knows: [
         "The alarm system can only be put in maintenance mode with a department card at the case panel, not remotely.",
-        "You were in the server room fixing the Wi-Fi from 19:50 to 20:40.",
+        "You were in the server room fixing the Wi-Fi from 7:50 PM to 8:40 PM.",
       ],
       culprit: false,
     },
   ],
   truth:
-    "Rafael Moreno stole the Golden Scarab to pay off a collector he forges for. He talked Dana into approving maintenance mode, switched off the case alarm with his restoration card at 20:05, opened the latch with wax still on his fingers, and hid the brooch in a hollow plaster cast in his workshop. Beatrice was hiding a cracked case, Lady Imogen was hiding that she's broke, and Theo was an undercover journalist whose wanderings, torn glove and propped door (hello, pigeon) made him look guilty.",
+    "Rafael Moreno stole the Golden Scarab to pay off a collector he forges for. He talked Dana into approving maintenance mode, switched off the case alarm with his restoration card at 8:05 PM, opened the latch with wax still on his fingers, and hid the brooch in a hollow plaster cast in his workshop. Beatrice was hiding a cracked case, Lady Imogen was hiding that she's broke, and Theo was an undercover journalist whose wanderings, torn glove and propped door (hello, pigeon) made him look guilty.",
   chain: [
-    { id: "alarm", description: "Maintenance mode with a collections-wing card", keywords: ["maintenance", "card", "alarm", "20:05"] },
+    { id: "alarm", description: "Maintenance mode with a collections-wing card", keywords: ["maintenance", "card", "alarm", "8:05 PM"] },
     { id: "wax", description: "Conservator's wax on the latch", keywords: ["wax", "latch"] },
     { id: "request", description: "Dana approved Rafael's request", keywords: ["approve", "request", "wax treatment", "schedule"] },
-    { id: "sighting", description: "Theo saw Rafael leaving the wing wiping his hands", keywords: ["wiping", "hands", "20:20", "workshop"] },
+    { id: "sighting", description: "Theo saw Rafael leaving the wing wiping his hands", keywords: ["wiping", "hands", "8:20 PM", "workshop"] },
   ],
 };

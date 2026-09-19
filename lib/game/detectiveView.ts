@@ -67,6 +67,8 @@ export const TESTIMONY_RULE = `EVIDENCE vs TESTIMONY (critical):
 - Never treat testimony as established fact. Record it as "X says ...". You may believe, doubt, corroborate, contradict or investigate it, but it stays testimony.
 - If testimony is implausible, say it is implausible. Do not quietly replace it with what you think really happened.`;
 
+export const TIME_RULE = `TIMES: write every time in 12-hour form with AM or PM, for example "9:05 PM" or "12:30 AM". Never use 24-hour times like 21:05.`;
+
 export function renderCase(view: DetectiveView): string {
   const lines = [
     `CASE: ${view.title}`,
