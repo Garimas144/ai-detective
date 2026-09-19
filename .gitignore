@@ -1,0 +1,9 @@
+node_modules
+.next
+.env
+.env.local
+.env*.local
+sim-logs/*
+!sim-logs/.gitkeep
+*.tsbuildinfo
+next-env.d.ts
