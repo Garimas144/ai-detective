@@ -3,16 +3,17 @@ import { AGENT_FIRST_MESSAGE, AGENT_PROMPT, buildAgentConfig } from "@/lib/agent
 import { NEBIUS_BASE_URL, MODELS } from "@/lib/config";
 
 describe("ElevenLabs agent configuration", () => {
-  it("is a constrained voice: it speaks the supplied question and can't ask its own", () => {
-    expect(AGENT_FIRST_MESSAGE).toBe("{{question}}");
+  it("is a silent listener: the host speaks the question, the agent never speaks first or asks its own", () => {
+    expect(AGENT_FIRST_MESSAGE).toBe(""); // pressing the mic must not trigger any voiceover
     expect(AGENT_PROMPT).toContain("{{question}}");
+    expect(AGENT_PROMPT).toMatch(/you never speak first/);
+    expect(AGENT_PROMPT).toMatch(/Say nothing until the player has spoken/);
     expect(AGENT_PROMPT).toMatch(/Never ask a question of your own/);
-    expect(AGENT_PROMPT).toMatch(/ONLY question this turn/);
     expect(AGENT_PROMPT).toMatch(/at most three words/);
     expect(AGENT_PROMPT).toMatch(/Never guess or discuss who is guilty/);
     const cfg = buildAgentConfig();
-    expect(cfg.conversation_config.agent.first_message).toBe("{{question}}");
-    expect(cfg.conversation_config.agent.prompt.max_tokens).toBeLessThanOrEqual(30); // it physically can't monologue or interrogate
+    expect(cfg.conversation_config.agent.first_message).toBe("");
+    expect(cfg.conversation_config.agent.prompt.max_tokens).toBeLessThanOrEqual(30);
   });
 
   it("is a private agent: sessions need a token our server issues", () => {

@@ -17,23 +17,23 @@ export const stolenPrototype: Case = {
     {
       id: "E1",
       title: "Lab keypad log",
-      text: "The lab door was opened at 21:14 with a master code. Master codes are held by the CEO, the lead engineer, the night security desk (for emergencies) and the visiting firmware contractor (a temporary code).",
+      text: "The lab door was opened at 21:14 with a master code. The keypad log records that a master code was used, not whose. A handful of senior Helix people and the visiting contractor have one.",
       kind: "key",
       explanation: "Elena used her own master code. Marcus was on the phone in the stairwell, Sam was on the phone with his daughter, and Kenji was debugging alone upstairs.",
     },
     {
       id: "E2",
       title: "Calibration rig log",
-      text: "Wren was powered down with its full six-step shutdown sequence at 21:12, before it was removed. Yanking it out would have fried it. The sequence is in the launch runbook that most of the team can read.",
+      text: "Wren was switched off cleanly at 21:12 before it was removed. Yanking it out would have fried it, so the thief did not want it damaged.",
       kind: "key",
       explanation: "The thief wanted Wren intact. Elena designed it and refused to see it damaged. Many people could have read the runbook, so this only shows care, not who.",
     },
     {
       id: "E3",
       title: "Warm coffee cup",
-      text: "A coffee cup with a lipstick mark on the lab bench, still slightly warm when security checked at 22:00.",
+      text: "A coffee cup with the Helix logo on the lab bench, still slightly warm when security checked at 22:00.",
       kind: "ambiguous",
-      explanation: "Priya's cup. She left it at 20:50 when Elena sent her home. It was in a thermal mug sleeve, which kept it warm.",
+      explanation: "Priya's cup. She left it at 20:50 when Elena sent her home. It was in a thermal mug sleeve, which kept it warm. Nadia and Priya both carry Helix cups, so it points at no one.",
     },
     {
       id: "E4",
@@ -54,7 +54,7 @@ export const stolenPrototype: Case = {
     {
       id: "C1",
       name: "Dr. Elena Voss",
-      blurb: "Helix's lead engineer",
+      blurb: "a member of the Wren team",
       background: "You spent six years building Wren. It's the best work of your life.",
       relationship: "You co-founded the lab with Marcus but he now controls the company. You mentor Priya.",
       reasonPresent: "Final calibration of Wren before tomorrow's launch.",
@@ -103,7 +103,7 @@ export const stolenPrototype: Case = {
       relationship: "Elena is your mentor and hero.",
       reasonPresent: "Finishing Wren's grip-sensor code before launch.",
       motive: "You were passed over for the launch team and it stung.",
-      suspicious: "You were the last person seen in the lab. The warm coffee cup with lipstick is yours.",
+      suspicious: "You were the last person seen in the lab. The warm coffee cup on the bench is yours.",
       secret: null,
       knows: [
         "At about 20:45 Elena told you to go home and said she'd lock the lab herself. That was unusual. She never locks up.",

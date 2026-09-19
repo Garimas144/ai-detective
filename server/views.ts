@@ -6,7 +6,9 @@
 import { caseCards, getCase } from "../lib/cases";
 import { GAME } from "../lib/config";
 import { computeResults, maxQuestions } from "../lib/game/engine";
-import type { ClientPayload, PlayerPrivate, PublicView, RevealData } from "../lib/protocol";
+import { DEFAULT_WEIGHTS } from "../lib/config";
+import type { CaseFileEntry, ClientPayload, PlayerPrivate, PublicView, RevealData } from "../lib/protocol";
+import { chargeFor } from "../lib/scoring";
 import type { GameState, Secrets } from "../lib/types";
 
 export interface ViewContext {
@@ -19,6 +21,33 @@ export interface ViewContext {
 
 const REVEALED: GameState["phase"][] = ["REVEAL", "FINISHED"];
 const ACCUSED: GameState["phase"][] = ["ACCUSATION", ...REVEALED];
+
+/** Per-person case file, built from the stored findings so every point in a score can be traced to a quote. */
+function buildCaseFile(state: GameState): CaseFileEntry[] {
+  const claim = (id: string) => state.claims.find((c) => c.id === id)?.statement ?? "";
+  return (state.profiles ?? []).map((p) => {
+    const suspicious = state.contradictions
+      .filter((c) => c.playerIds.includes(p.playerId))
+      .map((c) => ({ kind: c.kind, points: Number(chargeFor(c, DEFAULT_WEIGHTS).toFixed(2)), text: c.explanation, quotes: c.claimIds.map(claim).filter(Boolean) }))
+      .filter((x) => x.points > 0)
+      .sort((a, b) => b.points - a.points);
+    const checkedOut = state.corroborations
+      .filter((k) => k.playerIds.includes(p.playerId))
+      .map((k) => ({ text: k.explanation, strength: k.strength, quotes: k.claimIds.map(claim).filter(Boolean) }))
+      .sort((a, b) => b.strength - a.strength);
+    const mine = state.assessments.find((a) => a.playerId === p.playerId);
+    return {
+      playerId: p.playerId,
+      suspicionScore: p.suspicionScore,
+      rank: p.rank,
+      suspicious,
+      checkedOut,
+      detective: mine ? { suspicious: mine.suspicious, checkedOut: mine.checkedOut } : null,
+      questionsReceived: p.questionsReceived,
+      evasiveAnswers: state.turns.filter((t) => t.playerId === p.playerId && t.kind === "answer" && (t.evasive || t.timedOut)).length,
+    };
+  });
+}
 
 function revealData(state: GameState, secrets: Secrets): RevealData {
   const c = getCase(state.caseId!);
@@ -33,6 +62,7 @@ function revealData(state: GameState, secrets: Secrets): RevealData {
     analysis: state.revealAnalysis,
     accusation: state.accusation!,
     profiles: state.profiles ?? [],
+    caseFile: buildCaseFile(state),
     contradictions: state.contradictions,
     corroborations: state.corroborations,
     claims: state.claims,

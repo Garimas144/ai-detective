@@ -80,6 +80,7 @@ export function createGame(id: string, settings?: Partial<Settings>): GameState 
     analyzedClaimCount: 0,
     profiles: null,
     accusation: null,
+    assessments: [],
     endReason: null,
     revealAnalysis: null,
     busy: false,
@@ -365,7 +366,7 @@ function planRoundOne(state: GameState, planned: PlannedQuestion[]): PlannedQues
   for (const q of planned) if (!out.some((x) => x.targetPlayerId === q.targetPlayerId)) out.push(q);
   for (const p of state.players)
     if (!out.some((x) => x.targetPlayerId === p.id))
-      out.push({ targetPlayerId: p.id, text: `${detectiveName(p)}, take me through exactly where you were and who you saw during the key window.` });
+      out.push({ targetPlayerId: p.id, text: `${detectiveName(p)}, where exactly were you at ${getCase(state.caseId!).timeline.start}, and who else was in that room?` });
   return out;
 }
 
@@ -416,7 +417,7 @@ async function review(state: GameState, deps: EngineDeps, final: boolean): Promi
     const suspect = topSuspect(computeProfiles(state, weightsOf(deps)));
     const suspectPlayer = state.players.find((p) => p.id === suspect);
     const name = suspectPlayer ? detectiveName(suspectPlayer) : "";
-    plan = [{ targetPlayerId: suspect, text: `${name}, is there anything in your account you'd like to correct before I go on?` }];
+    plan = [{ targetPlayerId: suspect, text: `${name}, what time exactly did you last see the victim area, and who can confirm it?` }];
   }
   return { plan: plan.slice(0, questionsForNextRound), endEarly };
 }
@@ -492,7 +493,8 @@ async function finish(state: GameState, deps: EngineDeps, reason: EndReason) {
   try {
     const out = await callJson(deps.llm, buildAccusationRequest(buildDetectiveView(state, c), profiles), accusationSchema, deps.onCall);
     if (!state.players.some((p) => p.id === out.accusedPlayerId)) throw new Error(`accused unknown player ${out.accusedPlayerId}`);
-    state.accusation = { ...out, source: "model" };
+    state.accusation = { accusedPlayerId: out.accusedPlayerId, confidence: out.confidence, reasoning: out.reasoning, keyPoints: out.keyPoints, source: "model" };
+    state.assessments = out.assessments.filter((a) => state.players.some((p) => p.id === a.playerId));
   } catch (err) {
     state.error = err instanceof Error ? err.message : String(err);
     const suspect = topSuspect(profiles);

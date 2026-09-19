@@ -54,7 +54,7 @@ export const lakesideCabin: Case = {
     {
       id: "C1",
       name: "Chloe Tran",
-      blurb: "Nate's business partner and co-founder",
+      blurb: "one of Nate's oldest friends",
       background: "You and Nate built a successful app together from nothing.",
       relationship: "Nate is your co-founder. Maya is your roommate this weekend.",
       reasonPresent: "The reunion. You've all been friends since university.",
@@ -129,9 +129,9 @@ export const lakesideCabin: Case = {
     {
       id: "C5",
       name: "Dev Kapoor",
-      blurb: "the host, whose family owns the cabin",
+      blurb: "the host, whose family owns the cabin, and Nate's co-founder at the company",
       background: "Organised the whole weekend. Takes hosting very seriously.",
-      relationship: "Friends with everyone. You invested a little in Nate and Chloe's company.",
+      relationship: "Friends with everyone. You co-founded the company with Nate and Chloe, and you handle the investors.",
       reasonPresent: "Hosting the reunion.",
       motive: "The company's been losing money and your investment with it.",
       suspicious: "You know the cabin and the dock better than anyone.",
@@ -145,7 +145,7 @@ export const lakesideCabin: Case = {
     {
       id: "C6",
       name: "Sofia Reyes",
-      blurb: "Nate's former assistant, now a friend of the group",
+      blurb: "Nate's former assistant at the company, now a friend of the group",
       background: "You worked for Nate and Chloe's company for two years before quitting.",
       relationship: "You still talk to Nate. Chloe was your manager.",
       reasonPresent: "The reunion. Maya invited you.",

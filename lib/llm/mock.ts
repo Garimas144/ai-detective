@@ -109,11 +109,11 @@ function review(d: AnyRec) {
 }
 
 const OPENERS = [
-  "walk me through exactly where you were during the key window, minute by minute.",
-  "who can confirm where you were, and at what time?",
-  "what did you see or hear that seemed out of place tonight?",
-  "when did you last see anyone near the scene, and who was it?",
-  "tell me about the moment you first heard something was wrong. Where were you?",
+  "where exactly were you at the start of the key window, and who was with you?",
+  "which door did you use last, and what time was that?",
+  "who did you speak to most recently, and what time was it?",
+  "what time did you last see anyone near the scene, and who was it?",
+  "where were you when you first learned something was wrong?",
 ];
 
 function accuse(d: AnyRec) {

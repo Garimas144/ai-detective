@@ -70,7 +70,7 @@ export const museumHeist: Case = {
     {
       id: "C2",
       name: "Rafael Moreno",
-      blurb: "the museum's art restorer",
+      blurb: "a member of the museum's collections team",
       background: "You're a gifted restorer. Very few people know you also make forgeries for private collectors.",
       relationship: "You work for Beatrice. Dana handles your access requests.",
       reasonPresent: "You said you were working late in the restoration workshop.",

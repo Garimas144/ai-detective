@@ -1,6 +1,6 @@
 "use client";
 
-import type { PublicView, RevealData } from "@/lib/protocol";
+import type { CaseFileEntry, PublicView, RevealData } from "@/lib/protocol";
 import type { CaseEvidence, SuspicionProfile } from "@/lib/types";
 
 const KIND_LABEL: Record<CaseEvidence["kind"], string> = { key: "key clue", ambiguous: "ambiguous", red_herring: "red herring", odd: "just weird" };
@@ -108,10 +108,12 @@ export function Reveal({ view, reveal }: { view: PublicView; reveal: RevealData 
       </div>
 
       <div className="panel">
-        <h2>Hidden suspicion profiles</h2>
-        <p className="small muted">What the detective was tracking during the game. Nobody saw this until now.</p>
+        <h2>The detective's case file on each person</h2>
+        <p className="small muted">For everyone: what made them look suspicious (with the points each finding added to their score) and what checked out. Nobody saw this until now.</p>
         <div className="grid cols-3">
-          {profiles.map((p) => <ProfileCard key={p.playerId} p={p} name={who(p.playerId)} culprit={p.playerId === reveal.culpritPlayerId} accused={p.playerId === accusedId} />)}
+          {[...reveal.caseFile].sort((x, y) => x.rank - y.rank).map((f) => (
+            <CaseFileCard key={f.playerId} f={f} profile={profiles.find((p) => p.playerId === f.playerId)} name={who(f.playerId)} culprit={f.playerId === reveal.culpritPlayerId} accused={f.playerId === accusedId} />
+          ))}
         </div>
       </div>
 
@@ -138,6 +140,56 @@ export function Reveal({ view, reveal }: { view: PublicView; reveal: RevealData 
           {!reveal.corroborations.length && <div className="small muted">None found.</div>}
         </div>
       </div>
+    </div>
+  );
+}
+
+const KIND: Record<string, string> = { vs_evidence: "Contradicts the evidence", vs_alibi: "Changed from their written alibi", self: "Contradicts their own earlier answer", vs_other_player: "Conflicts with another person", implausible: "Implausible" };
+
+function CaseFileCard({ f, profile, name, culprit, accused }: { f: CaseFileEntry; profile?: SuspicionProfile; name: string; culprit: boolean; accused: boolean }) {
+  return (
+    <div className={`card ${culprit ? "guilty" : ""}`}>
+      <div className="row"><b>#{f.rank} {name}</b>{culprit && <span className="badge culprit">culprit</span>}{accused && <span className="badge accused">accused</span>}</div>
+      <div className="score" style={{ fontSize: 48, marginTop: 8 }}>{f.suspicionScore}</div>
+      <div className="tiny">suspicion score</div>
+      <div className="small muted" style={{ marginTop: 4 }}>Asked {f.questionsReceived} question(s){f.evasiveAnswers > 0 && ` · ${f.evasiveAnswers} dodged or unanswered`}</div>
+
+      <div className="card-section">
+        <div className="tiny" style={{ color: "var(--guilty)" }}>What made them suspicious</div>
+        {f.detective?.suspicious.map((t, i) => <div key={`d${i}`} className="small" style={{ marginTop: 4 }}>• {t}</div>)}
+        {f.suspicious.length > 0 && (
+          <details style={{ marginTop: 6 }}>
+            <summary>Score breakdown ({f.suspicious.length} finding{f.suspicious.length === 1 ? "" : "s"})</summary>
+            {f.suspicious.map((x, i) => (
+              <div key={i} className="contradiction" style={{ marginTop: 6 }}>
+                <div className="meta">+{x.points.toFixed(2)} · {KIND[x.kind] ?? x.kind}</div>
+                {x.quotes.map((q, j) => <div key={j} className="quote small">{q}</div>)}
+                <div className="small">{x.text}</div>
+              </div>
+            ))}
+          </details>
+        )}
+        {!f.detective?.suspicious.length && f.suspicious.length === 0 && <div className="small muted" style={{ marginTop: 4 }}>Nothing solid.</div>}
+      </div>
+
+      <div className="card-section">
+        <div className="tiny" style={{ color: "var(--innocent)" }}>What checked out</div>
+        {f.detective?.checkedOut.map((t, i) => <div key={`c${i}`} className="small" style={{ marginTop: 4 }}>• {t}</div>)}
+        {f.checkedOut.length > 0 && (
+          <details style={{ marginTop: 6 }}>
+            <summary>Confirmed by others or the evidence ({f.checkedOut.length})</summary>
+            {f.checkedOut.map((x, i) => (
+              <div key={i} className="contradiction" style={{ marginTop: 6, borderLeftColor: "var(--innocent)" }}>
+                <div className="meta">strength {x.strength.toFixed(2)}</div>
+                {x.quotes.map((q, j) => <div key={j} className="quote small">{q}</div>)}
+                <div className="small">{x.text}</div>
+              </div>
+            ))}
+          </details>
+        )}
+        {!f.detective?.checkedOut.length && f.checkedOut.length === 0 && <div className="small muted" style={{ marginTop: 4 }}>Nothing confirmed.</div>}
+      </div>
+      {profile && profile.openQuestions.length > 0 && <div className="small" style={{ marginTop: 8 }}><b>Still unanswered:</b> {profile.openQuestions.slice(0, 3).join(" · ")}</div>}
     </div>
   );
 }

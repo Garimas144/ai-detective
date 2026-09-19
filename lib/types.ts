@@ -193,6 +193,13 @@ export interface Accusation {
   source: "model" | "fallback";
 }
 
+/** The detective's own verdict on one person: what made them suspicious and what checked out. */
+export interface PlayerAssessment {
+  playerId: string;
+  suspicious: string[];
+  checkedOut: string[];
+}
+
 export interface RevealAnalysis {
   summary: string;
   importantLies: { playerId: string; statement: string; truth: string }[];
@@ -251,6 +258,7 @@ export interface GameState {
   analyzedClaimCount: number;
   profiles: SuspicionProfile[] | null;
   accusation: Accusation | null;
+  assessments: PlayerAssessment[];
   endReason: EndReason | null;
   revealAnalysis: RevealAnalysis | null;
   busy: boolean;

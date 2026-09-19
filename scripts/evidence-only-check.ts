@@ -26,7 +26,7 @@ async function one(caseId: string, seed: number, players: number) {
   const secrets = deal(state, rng);
   const req = buildAccusationRequest(buildDetectiveView(state, getCase(caseId)), computeProfiles(state));
   const out = await callJson(getLLM(), req, accusationSchema);
-  return { correct: out.accusedPlayerId === secrets.culpritPlayerId, confidence: out.confidence };
+  return { correct: out.accusedPlayerId === secrets.culpritPlayerId, confidence: out.confidence, why: out.reasoning };
 }
 
 async function main() {
@@ -39,11 +39,12 @@ async function main() {
   let solved = 0;
   for (const c of cases) {
     const results = await Promise.all(Array.from({ length: runs }, (_, i) => one(c.id, 100 + i, 5).catch(() => null)));
-    const ok = results.filter((r): r is { correct: boolean; confidence: number } => !!r);
+    const ok = results.filter((r): r is { correct: boolean; confidence: number; why: string } => !!r);
     const right = ok.filter((r) => r.correct).length;
     total += ok.length;
     solved += right;
     const conf = ok.length ? (ok.reduce((s, r) => s + r.confidence, 0) / ok.length).toFixed(2) : "n/a";
+    if (process.env.WHY) console.log(`     why (run 1): ${ok[0]?.why.replace(/\s+/g, " ").slice(0, 420)}`);
     console.log(`  ${c.title.padEnd(30)} solved from evidence alone: ${right}/${ok.length}   (avg confidence ${conf})`);
   }
   console.log(`\nOverall: ${solved}/${total} solved with NO testimony (chance with 5 suspects is about 1 in 5).`);

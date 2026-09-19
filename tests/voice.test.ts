@@ -5,6 +5,7 @@ import type { LLMRequest } from "@/lib/llm/types";
 import { Rooms, type Room } from "@/server/rooms";
 import { hostView, playerView, publicView } from "@/server/views";
 import { createVerifiedVoiceService } from "@/server/voice";
+import { readAloudMs } from "@/lib/voiceTiming";
 import { FAKE_ELEVEN_KEY, fakeVoice, type FakeVoice } from "./fakeVoice";
 
 function setup(voice: FakeVoice = fakeVoice("agent"), players = 3) {
@@ -210,20 +211,26 @@ describe("one question means one question", () => {
 });
 
 describe("host speech", () => {
-  it("in agent mode the phone speaks questions, so the host may only speak the accusation", async () => {
+  it("the host screen speaks every question automatically in agent mode, so the phone mic only captures answers", async () => {
     const { rooms, room, voice } = setup(fakeVoice("agent"));
     await toInterrogation(rooms, room);
-    await expect(rooms.tts(room, "question")).rejects.toThrow(/on the player's phone/);
+    await rooms.tts(room, "question");
+    expect(voice.spoken[0]).toBe(room.state.current!.text);
     await rooms.hostAction(room, { type: "endNow" });
     await rooms.tts(room, "accusation");
-    expect(voice.spoken).toHaveLength(1);
+    expect(voice.spoken).toHaveLength(2);
   });
 
-  it("in stt-tts fallback the host speaks the question", async () => {
+  it("in stt-tts fallback the host speaks the question too", async () => {
     const { rooms, room, voice } = setup(fakeVoice("stt-tts"));
     await toInterrogation(rooms, room);
     await rooms.tts(room, "question");
     expect(voice.spoken[0]).toBe(room.state.current!.text);
+  });
+
+  it("the phone's mic-unlock timing matches the server's read-aloud estimate", () => {
+    expect(readAloudMs("Where were you at nine?")).toBeGreaterThan(1500);
+    expect(readAloudMs("a ".repeat(40))).toBeGreaterThan(readAloudMs("Where were you at nine?"));
   });
 });
 

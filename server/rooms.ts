@@ -333,8 +333,6 @@ export class Rooms {
   async tts(room: Room, kind: "question" | "accusation") {
     const s = room.state;
     if (this.opts.voice.mode === "text") throw new Error("Voice is off.");
-    // In agent mode the player's phone speaks the question through the agent, so the host must not repeat it.
-    if (kind === "question" && this.opts.voice.mode === "agent") throw new Error("The agent speaks questions on the player's phone.");
     const key = kind === "question" ? `q:${s.current?.askedAt}` : "accusation";
     const text = kind === "question" ? s.current?.text : s.accusation?.reasoning;
     if (!text) throw new Error("Nothing to say right now.");

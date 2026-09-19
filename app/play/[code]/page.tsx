@@ -7,6 +7,7 @@ import { useCountdown } from "@/components/useCountdown";
 import type { AgentResult } from "@/components/AgentTurn";
 import { explainMicError, micSupport } from "@/components/mic";
 import { useRecorder } from "@/components/useRecorder";
+import { readAloudMs } from "@/lib/voiceTiming";
 import { emitAck, useGame } from "@/lib/client/useGame";
 import { EVENTS, type PlayerPrivate, type PublicView } from "@/lib/protocol";
 import type { CaseCharacter } from "@/lib/types";
@@ -244,6 +245,10 @@ type AnswerMode = "agent" | "recorder" | "text";
 function MyTurn({ view, game }: { view: PublicView; game: Game }) {
   const q = view.current!;
   const left = useCountdown(q.deadline, game.clockOffset);
+  // The host screen speaks the question automatically. Keep the mic locked until it has finished, so the phone
+  // never records the question itself and the player only ever taps the mic to give their answer.
+  const listenLeft = useCountdown(view.voiceMode === "text" ? null : q.askedAt + readAloudMs(q.text), game.clockOffset);
+  const listening = listenLeft !== null && listenLeft > 0;
   const mic = micSupport();
   // Best available mode first: real conversational agent, then recorder + server transcription, then typing.
   const initial: AnswerMode = view.voiceMode === "agent" && mic.ok ? "agent" : view.voiceMode !== "text" && mic.ok ? "recorder" : "text";
@@ -333,9 +338,11 @@ function MyTurn({ view, game }: { view: PublicView; game: Game }) {
         {sending && <div className="panel thinking" style={{ textAlign: "center" }}>Sending your answer…</div>}
         {heard !== null && <p className="small muted">The detective heard: “{heard || "(nothing)"}”</p>}
 
-        {!working && mode === "agent" && <AgentTurn secondsLeft={left} onDone={sendAgent} onFail={fallBack} />}
+        {listening && mode !== "text" && <div className="panel thinking" style={{ textAlign: "center" }}>Listen to the detective's question…</div>}
 
-        {!working && mode === "recorder" && (
+        {!working && !listening && mode === "agent" && <AgentTurn secondsLeft={left} onDone={sendAgent} onFail={fallBack} />}
+
+        {!working && !listening && mode === "recorder" && (
           <button className={`mic ${rec.recording ? "rec" : ""}`} onClick={toggleMic}>
             <MicIcon />
             {rec.recording ? "Tap to finish" : "Tap to answer"}

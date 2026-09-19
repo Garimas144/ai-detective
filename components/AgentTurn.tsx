@@ -95,7 +95,7 @@ function Inner({ secondsLeft, onDone, onFail }: Props) {
     }
     conversationId.current = res.conversationId;
     try {
-      // The first tap is a real user gesture, which iOS Safari requires for microphone and audio playback.
+      // The tap is a real user gesture, which iOS Safari requires for the microphone. The agent stays silent until you speak.
       conversation.startSession({ conversationToken: res.token, connectionType: "webrtc", dynamicVariables: { question: res.question } });
     } catch (err) {
       onFail(explainMicError(err) || (err instanceof Error ? err.message : "Couldn't start the voice session."));
@@ -137,8 +137,7 @@ function Inner({ secondsLeft, onDone, onFail }: Props) {
   );
 
   const speaking = conversation.isSpeaking;
-  const label =
-    phase === "idle" ? "Tap to start" : phase === "starting" ? "Connecting…" : phase === "finishing" ? "Sending…" : speaking ? "Detective is asking…" : "Speak now";
+  const label = phase === "idle" ? "Tap to answer" : phase === "starting" ? "Connecting…" : phase === "finishing" ? "Sending…" : speaking ? "Mm-hm…" : "Speak now";
 
   return (
     <div className="stack">
@@ -153,7 +152,7 @@ function Inner({ secondsLeft, onDone, onFail }: Props) {
         </svg>
         {label}
       </button>
-      {phase === "idle" && <p className="small muted" style={{ textAlign: "center", margin: 0 }}>The detective will ask you the question out loud. Answer when the detective stops speaking.</p>}
+      {phase === "idle" && <p className="small muted" style={{ textAlign: "center", margin: 0 }}>Listen to the question on the main speaker. Tap the mic only when you are ready to answer.</p>}
       {heard.length > 0 && <p className="quote small" style={{ margin: 0 }}>You said: “{heard.join(" ")}”</p>}
       {phase === "live" && (
         <button className="btn-xl primary" onClick={() => done(false)}>

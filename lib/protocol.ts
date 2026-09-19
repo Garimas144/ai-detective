@@ -78,10 +78,26 @@ export interface RevealData {
   analysis: RevealAnalysis | null;
   accusation: Accusation;
   profiles: SuspicionProfile[];
+  caseFile: CaseFileEntry[];
   contradictions: Contradiction[];
   corroborations: Corroboration[];
   claims: Claim[];
   reviewLog: { round: number; reasoning: string }[];
+}
+
+/** One person's file: the itemized score, what made them suspicious, and what checked out. Reveal only. */
+export interface CaseFileEntry {
+  playerId: string;
+  suspicionScore: number;
+  rank: number;
+  /** Findings that raised suspicion, most damaging first, with the points each added. */
+  suspicious: { kind: string; points: number; text: string; quotes: string[] }[];
+  /** Findings that held up. */
+  checkedOut: { text: string; strength: number; quotes: string[] }[];
+  /** The detective's own wording per person (may be empty if the model omitted it). */
+  detective: { suspicious: string[]; checkedOut: string[] } | null;
+  questionsReceived: number;
+  evasiveAnswers: number;
 }
 
 export interface PublicView {

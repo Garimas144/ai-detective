@@ -1,25 +1,28 @@
-// The ElevenLabs Conversational AI agent used for spoken turns.
+// The ElevenLabs Conversational AI agent used for spoken turns (the phone microphone side).
 //
-// Design: the agent is a CONSTRAINED VOICE, not an investigator. The game server (and Nebius behind it) decides
-// every question. For each turn the phone starts a session with the one question as a dynamic variable; the agent
-// speaks it as its first message and then only acknowledges. It can't add questions, so the question budget
-// stays with the game engine. The final user transcript goes back to the server as testimony.
+// Design: the agent is a CONSTRAINED LISTENER, not an investigator. The game server (and Nebius behind it) decides
+// every question, and the host screen speaks it aloud automatically. The phone microphone button only opens the
+// agent session to capture the answer: the agent stays silent until the player speaks, then only acknowledges.
+// It can't add questions, so the question budget stays with the game engine. The final user transcript goes back
+// to the server as testimony.
 
 import { NEBIUS_BASE_URL, MODELS, VOICE } from "./config";
 
-export const AGENT_FIRST_MESSAGE = "{{question}}";
+/** Empty on purpose: the question is spoken out loud by the host screen, and the agent waits for the player to speak. */
+export const AGENT_FIRST_MESSAGE = "";
 
-export const AGENT_PROMPT = `You are the voice of a detective in a party game. The game's software decides every question. You never decide what to ask.
+export const AGENT_PROMPT = `You are the voice of a detective in a party game. The game's software decides every question and asks it out loud on the main speaker. You never decide what to ask, and you never speak first.
 
-Your first message already asked the player this question: "{{question}}". That is the ONLY question this turn.
+The question the player is answering right now is: "{{question}}". That is the ONLY question this turn.
 
 Rules you must follow, always:
-1. Never ask a question of your own. No follow-ups, no clarifications, no "anything else?".
-2. While the player answers, stay quiet. When they finish, reply with at most three words, chosen only from: "Mm-hm." "Go on." "I see." "Noted."
-3. Never comment on, judge, summarize or react to what they said. Never say whether you believe them.
-4. Never guess or discuss who is guilty or anything about the case beyond the question above.
-5. If the player asks you something, say only: "Just answer the question."
-6. If the player says they are finished, say only "Noted." and stop talking.`;
+1. Say nothing until the player has spoken.
+2. Never ask a question of your own. No follow-ups, no clarifications, no "anything else?".
+3. When the player finishes, reply with at most three words, chosen only from: "Mm-hm." "Go on." "I see." "Noted."
+4. Never comment on, judge, summarize or react to what they said. Never say whether you believe them.
+5. Never guess or discuss who is guilty or anything about the case.
+6. If the player asks you something, say only: "Just answer the question."
+7. If the player says they are finished, say only "Noted." and stop talking.`;
 
 export interface AgentConfigOptions {
   voiceId?: string;

@@ -9,6 +9,9 @@ export const accusationSchema = z.object({
   confidence: z.number().min(0).max(1),
   reasoning: z.string(),
   keyPoints: z.array(z.string()).min(1).max(6),
+  assessments: z
+    .array(z.object({ playerId: z.string(), suspicious: z.array(z.string()).max(6), checkedOut: z.array(z.string()).max(6) }))
+    .default([]),
 });
 export type AccusationOutput = z.infer<typeof accusationSchema>;
 
@@ -26,9 +29,13 @@ How to decide:
 Then announce it out loud:
 - "reasoning": a spoken accusation of 4 to 7 sentences, addressed to the room. Name the accused, walk through the key contradictions and evidence, and say clearly which parts are evidence and which are testimony. No stage directions or markdown.
 - "keyPoints": 2 to 5 short bullet phrases of the decisive points.
+- "assessments": one entry for EVERY person being questioned (accused or not), so the room can see how you judged each of them:
+  - "suspicious": what specifically made this person suspicious. Each item names the actual statement or evidence and why it is a problem (for example "Said she was in the library at 21:10, but Dana says she saw her at the loading dock at 21:12"). Include story changes and dodged questions. Write "Nothing solid" if there is nothing.
+  - "checkedOut": what specifically held up for this person: statements corroborated by another person or by the evidence, and alibi details that stayed consistent. Write "Nothing confirmed" if nothing did.
+  Be concrete and keep each item to one sentence. Never claim something checked out unless it is in the testimony or findings above.
 
 Reply with JSON only:
-{"accusedPlayerId":string,"confidence":number,"reasoning":string,"keyPoints":[string]}`;
+{"accusedPlayerId":string,"confidence":number,"reasoning":string,"keyPoints":[string],"assessments":[{"playerId":string,"suspicious":[string],"checkedOut":[string]}]}`;
 
 export function buildAccusationRequest(view: DetectiveView, profiles: SuspicionProfile[]): LLMRequest {
   const speaker = (id: string) => view.players.find((p) => p.id === id)?.character ?? id;
@@ -51,7 +58,7 @@ Accuse exactly one person, using their id.`;
     user,
     json: true,
     temperature: 0.3,
-    maxTokens: 10000,
+    maxTokens: 14000,
     mockData: { profiles, players: view.players },
   };
 }

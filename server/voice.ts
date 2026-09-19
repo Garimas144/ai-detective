@@ -11,6 +11,9 @@
 // In every mode the authoritative testimony is the final transcript text recorded by the game server.
 
 import { VOICE } from "../lib/config";
+import { readAloudMs } from "../lib/voiceTiming";
+
+export { readAloudMs };
 
 export type VoiceMode = "agent" | "stt-tts" | "text";
 
@@ -168,12 +171,6 @@ export async function createVerifiedVoiceService(cfg?: Partial<VoiceConfig>): Pr
   } catch (err) {
     return new ElevenLabsVoice(apiKey, "stt-tts", [`Couldn't check the agent (${err instanceof Error ? err.message : err}): using the recorder + text-to-speech fallback.`], full);
   }
-}
-
-/** Rough time to read a question aloud, added to the answer deadline whenever voice is on. */
-export function readAloudMs(text: string): number {
-  const words = text.trim().split(/\s+/).length;
-  return Math.ceil((words / 2.6) * 1000) + 1500;
 }
 
 /** In agent mode the phone must also connect a WebRTC session before the question is heard. */

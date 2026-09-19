@@ -246,29 +246,32 @@ function Alibis({ view, act, busy }: { view: PublicView; act: Act; busy: boolean
 }
 
 /**
- * Plays detective speech on the shared screen with ElevenLabs text-to-speech. Browsers need one click first to allow audio.
- * In agent mode the player's phone speaks each question through the agent, so this screen only speaks the accusation.
+ * Speaks the detective's questions and the accusation on the shared screen with ElevenLabs text-to-speech, automatically
+ * (players never have to press anything to hear the question). Browsers only allow sound after a click on the page,
+ * which the host always makes while setting up; if a browser still blocks it, a "tap to hear" button appears.
  */
 function useDetectiveVoice(view: PublicView) {
-  const [on, setOn] = useState(false);
+  const [on, setOn] = useState(true);
+  const [blocked, setBlocked] = useState(false);
   const audio = useRef<HTMLAudioElement | null>(null);
   const spoken = useRef<string | null>(null);
   const say = async (kind: "question" | "accusation", key: string) => {
     if (!on || view.voiceMode === "text" || spoken.current === key) return;
-    if (kind === "question" && view.voiceMode === "agent") return;
     spoken.current = key;
     const res = await emitAck<{ audio: ArrayBuffer; mimeType: string }>(EVENTS.tts, { kind }, 30_000);
     if (!res.ok) return;
     audio.current?.pause();
     audio.current = new Audio(URL.createObjectURL(new Blob([res.audio], { type: res.mimeType })));
-    audio.current.play().catch(() => {});
+    audio.current.play().then(() => setBlocked(false)).catch(() => setBlocked(true));
   };
-  return { on, setOn, say, available: view.voiceMode !== "text" };
+  const unblock = () => audio.current?.play().then(() => setBlocked(false)).catch(() => {});
+  return { on, setOn, say, blocked, unblock, available: view.voiceMode !== "text" };
 }
 
 function VoiceToggle({ voice }: { voice: ReturnType<typeof useDetectiveVoice> }) {
   if (!voice.available) return null;
-  return <button onClick={() => voice.setOn(!voice.on)}>{voice.on ? "🔊 Detective voice on" : "🔈 Turn on detective voice (accusation)"}</button>;
+  if (voice.blocked) return <button className="primary" onClick={voice.unblock}>🔈 Tap to hear the detective</button>;
+  return <button onClick={() => voice.setOn(!voice.on)}>{voice.on ? "🔊 Detective voice on" : "🔈 Detective voice muted"}</button>;
 }
 
 function Interrogation({ view, act, busy, clockOffset }: { view: PublicView; act: Act; busy: boolean; clockOffset: number }) {

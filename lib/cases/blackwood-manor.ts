@@ -2,7 +2,7 @@ import type { Case } from "../types";
 
 // Culprit: Dr. Alistair Finch (C1).
 // The evidence alone does NOT name Finch: the note (E1) threatens "the authorities" (Finch, Thorne and Jasper all
-// have something to fear) and digitalis (E2) is also made from the kitchen-garden foxgloves. Testimony decides it:
+// have something to fear) and the arsenic (E2) came from rat poison anyone on the estate could reach. Testimony decides it:
 // Margaret saw Finch enter the study 21:50-22:00 -> Mrs. Hodge gave him matches at 22:25 -> the Colonel says Finch
 // left the card game twice -> Thorne was turned away at the study door by Finch.
 export const blackwoodManor: Case = {
@@ -24,9 +24,9 @@ export const blackwoodManor: Case = {
     {
       id: "E2",
       title: "Broken brandy glass",
-      text: "A broken brandy glass beside the desk. The spilled brandy contains digitalis. It is a heart medicine, and it is also made from the foxgloves that grow in the kitchen garden.",
+      text: "A broken brandy glass beside the desk. The spilled brandy contains arsenic, the kind sold as rat poison. Rat poison is kept in the garden shed, the kitchen pantry and the stables.",
       kind: "key",
-      explanation: "Finch carries digitalis in his medical bag. He dosed the brandy during his 'consultation' at 21:50. The foxgloves were a red herring inside a key clue: anyone could have used them.",
+      explanation: "Finch pocketed a packet of rat poison from the garden shed that afternoon and dosed the brandy during his 'consultation' at 21:50. Anyone on the estate could have taken it, which is why it does not point at one person.",
     },
     {
       id: "E3",
@@ -54,12 +54,12 @@ export const blackwoodManor: Case = {
     {
       id: "C1",
       name: "Dr. Alistair Finch",
-      blurb: "the family physician and Lord Blackwood's old friend",
+      blurb: "Lord Blackwood's oldest friend and a frequent dinner guest",
       background: "Thirty years as a respected country doctor. For the last two you've been forging prescriptions to sell.",
       relationship: "Edmund was your oldest friend. You play cards with the Colonel.",
       reasonPresent: "Invited to dinner and a private consultation with Edmund.",
       motive: "Edmund found out about the forged prescriptions and wrote that he would report you to the Medical Council on Monday.",
-      suspicious: "You carry a medical bag. You were alone with Edmund in the study tonight.",
+      suspicious: "You were alone with Edmund in the study tonight, and you were seen near the garden shed that afternoon.",
       secret: null,
       knows: [
         "Jasper has gambling debts. Edmund told you so.",
@@ -67,7 +67,7 @@ export const blackwoodManor: Case = {
       ],
       culprit: true,
       whatYouDid: [
-        "At 21:50 you went to the study for a 'private consultation' and slipped digitalis from your bag into Edmund's brandy.",
+        "At 21:50 you went to the study for a 'private consultation' and slipped the rat poison you had taken from the garden shed that afternoon into Edmund's brandy.",
         "You rejoined the Colonel's card game in the drawing room at 22:00.",
         "At about 22:25 you asked Mrs. Hodge for matches, went back to the study, found Edmund dead, and burned his letter. The fire was dying and it only half burned.",
         "You were back at the card table by 22:35.",
@@ -76,7 +76,7 @@ export const blackwoodManor: Case = {
         "Margaret may have seen you enter the study.",
         "Mrs. Hodge gave you the matches.",
         "The Colonel knows you left the card game twice.",
-        "Digitalis is a doctor's drug.",
+        "You were seen near the garden shed that afternoon.",
       ],
     },
     {
@@ -194,10 +194,10 @@ export const blackwoodManor: Case = {
     },
   ],
   truth:
-    "Dr. Alistair Finch poisoned Lord Blackwood with digitalis from his own bag during a 21:50 'consultation', because Edmund was about to report his forged prescriptions. At 22:25 he borrowed matches from Mrs. Hodge and tried to burn Edmund's letter, but it only half burned. The stopped clock simply ran down, the muddy footprint and the open French window were Jasper sneaking out to pay his bookie, and the chicken was Mrs. Hodge's hen, who wandered in through that window.",
+    "Dr. Alistair Finch poisoned Lord Blackwood with rat poison from the garden shed during a 21:50 'consultation', because Edmund was about to report his forged prescriptions. At 22:25 he borrowed matches from Mrs. Hodge and tried to burn Edmund's letter, but it only half burned. The stopped clock simply ran down, the muddy footprint and the open French window were Jasper sneaking out to pay his bookie, and the chicken was Mrs. Hodge's hen, who wandered in through that window.",
   chain: [
     { id: "letter", description: "Letter threatening to go to the authorities", keywords: ["authorities", "letter", "note", "burn"] },
-    { id: "digitalis", description: "Digitalis is a doctor's drug", keywords: ["digitalis", "bag", "prescription"] },
+    { id: "poison", description: "Rat poison taken from the garden shed", keywords: ["poison", "arsenic", "shed", "garden"] },
     { id: "study", description: "Seen entering the study 21:50-22:00", keywords: ["21:50", "study", "pale", "consultation"] },
     { id: "matches", description: "Borrowed matches at 22:25 and left the game twice", keywords: ["matches", "22:25", "smoke", "left twice", "card"] },
   ],
